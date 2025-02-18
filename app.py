@@ -10,6 +10,15 @@ import io  # For creating in-memory file-like objects
 # Import your axiom page
 import axiom
 
+# ──────────────────────────────────────────────────────────────────────────
+# 1. SET PAGE CONFIG (MUST BE FIRST STREAMLIT COMMAND IN THIS SCRIPT)
+# ──────────────────────────────────────────────────────────────────────────
+st.set_page_config(
+    layout="wide",
+    page_title="Multpage App: Paleo vs. Probability Axioms",
+    initial_sidebar_state="expanded"
+)
+
 def generate_dataset(num_samples: int, foram_std: float, variation: int) -> pd.DataFrame:
     """
     Your existing function for generating a paleoenvironmental dataset.
@@ -56,15 +65,11 @@ def generate_dataset(num_samples: int, foram_std: float, variation: int) -> pd.D
 def paleo_data_page():
     """
     Displays the main page for generating the paleo dataset and visualizing it.
-    This is your existing code from the question, wrapped in a function.
+    This code was originally calling st.set_page_config(), 
+    but now we rely on the single call at the top of app.py.
     """
-    st.set_page_config(
-        page_title="Basic Statistical Understanding",
-        layout="wide",
-        initial_sidebar_state="expanded"
-    )
 
-    # If you have a banner image:
+    # Optional banner image
     st.image("banner.png", use_container_width=True)
 
     st.sidebar.title("Dataset Controls")
@@ -159,7 +164,6 @@ def paleo_data_page():
         
         with col3:
             st.subheader("Histogram: Foraminifera Counts")
-            import matplotlib.pyplot as plt
             fig_foram_hist = plt.figure(figsize=(5, 4))
             plt.hist(df['Foraminifera_Count'], bins=10, color='skyblue', edgecolor='black')
             plt.axvline(mean_foram, color='red', linestyle='dashed', linewidth=1, label=f"Mean: {mean_foram:.2f}")
@@ -259,7 +263,6 @@ def paleo_data_page():
             higher or lower Calcite percentages. 
             """
         )
-        import seaborn as sns
         fig_corr = plt.figure(figsize=(4, 3))
         sns.heatmap(df[['Foraminifera_Count', 'Calcite_Percentage']].corr(),
                     annot=True, cmap='coolwarm', vmin=-1, vmax=1)
@@ -300,9 +303,9 @@ def main():
     """
     Multipage logic using a selectbox in the sidebar to choose which page to display.
     """
-    st.set_page_config(layout="wide", page_title="Multpage App: Paleo vs. Probability Axioms")
+    # The line below was moved to the top of the file
+    # st.set_page_config(layout="wide", page_title="Multpage App: Paleo vs. Probability Axioms")
 
-    # Create a sidebar selector for pages
     st.sidebar.title("Navigation")
     selected_page = st.sidebar.selectbox(
         "Go to Page:",
