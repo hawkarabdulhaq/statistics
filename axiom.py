@@ -1,9 +1,11 @@
+# axiom.py
+
 import streamlit as st
 import pandas as pd
 import numpy as np
 import altair as alt
 
-def generate_random_drillholes(total_holes, n_high, n_medium, n_low):
+def generate_random_drillholes(total_holes: int, n_high: int, n_medium: int, n_low: int) -> pd.DataFrame:
     """
     Generates a random set of drill holes with assigned ore-grade categories.
     
@@ -19,18 +21,18 @@ def generate_random_drillholes(total_holes, n_high, n_medium, n_low):
             - 'Grade Category': One of High, Medium, Low, or Unassigned.
             - 'X_Coord', 'Y_Coord': Random 2D coordinates for plotting.
     """
-    # Create a list of labels based on user inputs
+    # Create labels based on user inputs
     grade_labels = (["High"] * n_high) + (["Medium"] * n_medium) + (["Low"] * n_low)
     
-    # If the sum of assigned categories < total_holes, fill the remainder as "Unassigned"
+    # Fill remainder with 'Unassigned' if total_holes > sum of assigned categories
     remainder = total_holes - len(grade_labels)
     if remainder > 0:
-        grade_labels += (["Unassigned"] * remainder)
+        grade_labels += ["Unassigned"] * remainder
     
-    # Shuffle to simulate random distribution
+    # Shuffle for random distribution of categories
     np.random.shuffle(grade_labels)
     
-    # Generate random positions for each hole (range: -50 to +50)
+    # Generate random X, Y coordinates (range: -50 to +50)
     x_coords = np.random.randint(-50, 51, size=total_holes)
     y_coords = np.random.randint(-50, 51, size=total_holes)
     
@@ -44,8 +46,13 @@ def generate_random_drillholes(total_holes, n_high, n_medium, n_low):
     return pd.DataFrame(data)
 
 def display_probability_axioms_ui(
-    assigned_total, high_count, medium_count, low_count,
-    p_high, p_medium, p_low
+    assigned_total: int,
+    high_count: int,
+    medium_count: int,
+    low_count: int,
+    p_high: float,
+    p_medium: float,
+    p_low: float
 ):
     """
     Displays a user-friendly UI explaining Probability Axioms in Action
@@ -82,7 +89,12 @@ def display_probability_axioms_ui(
             st.markdown("### Low-Grade")
             st.write(f"**{low_count}** (P = {p_low})")
 
-        st.divider()
+        # Optional: If you're using Streamlit >= 1.22, st.divider() adds a horizontal rule
+        try:
+            st.divider()
+        except AttributeError:
+            # If st.divider is not available in older Streamlit, just ignore it
+            pass
 
         # Probability Axioms Explanation
         st.subheader("1) Non-Negativity")
@@ -98,7 +110,7 @@ def display_probability_axioms_ui(
 
         st.subheader("3) Additive Rule")
         p_high_or_low = p_high + p_low
-        st.write("- When events can't overlap (mutually exclusive):")
+        st.write("- When events cannot overlap (mutually exclusive):")
         st.latex(r"P(\text{High OR Low}) = P(\text{High}) + P(\text{Low})")
         st.write(f"- Numerically: {p_high} + {p_low} = **{p_high_or_low:.2f}**")
 
@@ -106,47 +118,51 @@ def display_probability_axioms_ui(
     with st.expander("⛏️ Geological & Risk Context", expanded=True):
         st.write("""
         - **Economic Feasibility**: A higher proportion of High-grade ore 
-          might be lucrative, but you must also factor in costs of deeper 
-          drilling, environmental impact, and market prices.
-        - **Geotechnical Risks**: High-grade zones can correlate with 
-          heavily fractured rock, increasing slope instability or 
-          underground collapse risk.
+          might be lucrative, but costs for deeper drilling, environmental impact, 
+          and market fluctuations must be considered.
+        - **Geotechnical Risks**: High-grade zones may correlate with 
+          heavily fractured rock, impacting slope stability or underground workings.
         - **Exploration Strategy**: 
-          - If, for example, 40% of holes are High-grade, you might expand 
-            drilling to confirm continuity of that zone.  
-          - Even a 20% Low-grade proportion matters if it extends significantly 
+          - Example: If 40% of holes are High-grade, you might expand drilling 
+            to confirm that zone’s continuity.  
+          - Even a 20% Low-grade proportion can be significant if it extends 
             in volume or is easy to process.
         - **Efficient Resource Allocation**: 
-          Probability informs how you prioritize drill sites, budget, 
-          and time. If 'High or Low' together is 60%, you might weigh the risk 
-          of hitting mostly low-value ore before committing more funds.
+          Probability helps decide drill-site prioritization, budget, 
+          and timeline. If 'High or Low' is 60%, factor in the risk 
+          of encountering mostly low-value ore.
         """)
 
         st.warning("""
-        In real-world projects, data are more complex (multiple intervals per hole, 
-        continuous grade values, advanced geostatistics, etc.). Nonetheless, the 
-        **fundamental probability axioms** always underpin the logic, keeping 
-        analyses consistent and transparent.
+        In real projects, data are more complex (multiple intervals per hole, 
+        continuous grade values, advanced geostatistics, etc.). 
+        Still, the **fundamental probability axioms** remain critical 
+        for consistent, transparent analyses.
         """)
 
-        # Key question highlighted
+        # Key question
         st.write("### Key Question")
         st.info("""
         **How do basic probability axioms help us formalize uncertainty in geological exploration?**
 
-        By guaranteeing probabilities remain coherent (no negatives, sum to 1, correct handling of 
-        mutually exclusive events), we can systematically measure how likely it is to find 
-        high-grade ore, enabling more informed, data-driven decisions on risk and feasibility.
+        By ensuring probabilities remain coherent (no negatives, they sum to 1, 
+        and mutually exclusive events are correctly handled). This structure 
+        lets us systematically gauge the likelihood of finding high-grade ore, 
+        informing data-driven decisions on risk and feasibility.
         """)
 
 def main():
+    """
+    Main function to demonstrate an interactive app that generates
+    random drill holes and applies probability axioms.
+    """
     st.title("Dynamic Subsurface Ore Deposit Exploration (Enhanced UI)")
 
     st.write("""
-    This **interactive Streamlit app** simulates a simplified scenario of a subsurface ore deposit. 
-    You can adjust how many total holes are drilled and how many are classified as High, Medium, or Low grade. 
-    The app then demonstrates how **basic probability axioms** apply, helping quantify the uncertainty 
-    of selecting a High-grade hole at random.
+    This **interactive Streamlit app** simulates a simplified subsurface ore deposit.
+    You can adjust how many total holes are drilled and how many are classified as 
+    High, Medium, or Low grade. We'll then demonstrate **basic probability axioms** 
+    to quantify the uncertainty of selecting a High-grade hole at random.
     """)
 
     # -----------------------------
@@ -182,7 +198,7 @@ def main():
         step=1
     )
 
-    # Check if sum of assigned categories > total_holes
+    # Check if sum of assigned categories exceeds total holes
     if (n_high + n_medium + n_low) > total_holes:
         st.sidebar.error("Sum of High, Medium, and Low cannot exceed the total number of holes!")
         st.stop()
@@ -194,18 +210,17 @@ def main():
 
     st.subheader("Drill Holes Dataset")
     st.write("""
-    The table below shows each drill hole, its **ore-grade category**, and random **2D coordinates** 
-    (just for visualization). 
-    If the sum of High, Medium, and Low is less than the total, 
-    the remainder are labeled **'Unassigned'**.
+    Below is the dataset showing each drill hole's **ore-grade category** 
+    and random **2D coordinates** (for illustrative mapping).
+    If High + Medium + Low < Total, the remainder are labeled **'Unassigned'**.
     """)
     st.dataframe(df)
 
     # -------------------------------------------
-    # 3. Plot the Drill Holes on a Simple 2D Map
+    # 3. Plot the Drill Holes in 2D Space
     # -------------------------------------------
     st.subheader("2D Layout of Drill Holes")
-    st.write("Points represent the random XY location of each drill hole, colored by Grade Category.")
+    st.write("Each point corresponds to a drill hole, colored by its Grade Category.")
 
     color_scale = alt.Scale(
         domain=["High", "Medium", "Low", "Unassigned"],
@@ -224,17 +239,16 @@ def main():
         .properties(width=600, height=400)
         .interactive()
     )
-
     st.altair_chart(chart, use_container_width=True)
 
     # ------------------------------------
     # 4. Probability Calculations & Axioms
     # ------------------------------------
-    # Identify the subset of holes with assigned categories
+    # Filter out 'Unassigned' holes
     assigned_df = df[df["Grade Category"] != "Unassigned"]
     assigned_total = len(assigned_df)
 
-    # Compute counts and probabilities if we have assigned holes
+    # Compute probabilities
     if assigned_total > 0:
         high_count = len(assigned_df[assigned_df["Grade Category"] == "High"])
         medium_count = len(assigned_df[assigned_df["Grade Category"] == "Medium"])
@@ -244,11 +258,11 @@ def main():
         p_medium = round(medium_count / assigned_total, 3)
         p_low = round(low_count / assigned_total, 3)
     else:
-        # If everything is unassigned, no probabilities can be computed
+        # If no holes are assigned, probabilities are zero
         high_count = medium_count = low_count = 0
         p_high = p_medium = p_low = 0
 
-    # Now show the enhanced Probability Axioms UI
+    # Display the Probability Axioms UI
     display_probability_axioms_ui(
         assigned_total,
         high_count,
