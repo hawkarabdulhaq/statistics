@@ -60,7 +60,7 @@ def main():
     )
 
     # Display banner image (ensure 'banner.png' is in the same directory or an accessible path)
-    st.image("banner.png", use_column_width=True)
+    st.image("banner.png", use_container_width=True)
 
     # ------------------ SIDEBAR ------------------
     st.sidebar.title("Dataset Controls")
