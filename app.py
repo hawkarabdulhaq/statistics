@@ -1,3 +1,5 @@
+# app.py
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -5,10 +7,12 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import io  # For creating in-memory file-like objects
 
+# Import your axiom page
+import axiom
+
 def generate_dataset(num_samples: int, foram_std: float, variation: int) -> pd.DataFrame:
     """
-    Generate a paleoenvironmental dataset with the specified number of samples,
-    standard deviation for Foraminifera counts, and variation (number of outliers).
+    Your existing function for generating a paleoenvironmental dataset.
     """
     # Baseline means
     mean_foram = 25
@@ -49,20 +53,20 @@ def generate_dataset(num_samples: int, foram_std: float, variation: int) -> pd.D
     }
     return pd.DataFrame(data)
 
-def main():
-    # ---------------------------------------------------
-    # TOP SECTION: Setting page config & showing banner
-    # ---------------------------------------------------
+def paleo_data_page():
+    """
+    Displays the main page for generating the paleo dataset and visualizing it.
+    This is your existing code from the question, wrapped in a function.
+    """
     st.set_page_config(
         page_title="Basic Statistical Understanding",
         layout="wide",
         initial_sidebar_state="expanded"
     )
 
-    # Display banner image (ensure 'banner.png' is in the same directory or an accessible path)
+    # If you have a banner image:
     st.image("banner.png", use_container_width=True)
 
-    # ------------------ SIDEBAR ------------------
     st.sidebar.title("Dataset Controls")
     st.sidebar.write(
         """
@@ -90,7 +94,6 @@ def main():
     
     generate_button = st.sidebar.button("Generate & Analyze Dataset")
 
-    # ------------------ MAIN CONTENT ------------------
     st.write(
         """
         This app demonstrates how to generate and interpret a synthetic paleoenvironmental dataset.
@@ -103,12 +106,11 @@ def main():
         # Generate Dataset
         df = generate_dataset(num_samples, foram_std, variation)
         
-        # Create a CSV file in memory (not saved locally)
+        # Create a CSV file in memory
         csv_buffer = io.StringIO()
         df.to_csv(csv_buffer, index=False)
-        csv_data = csv_buffer.getvalue()  # This is the CSV as a string
+        csv_data = csv_buffer.getvalue()
         
-        # Provide a download button for the CSV
         st.download_button(
             label="Download CSV",
             data=csv_data,
@@ -157,6 +159,7 @@ def main():
         
         with col3:
             st.subheader("Histogram: Foraminifera Counts")
+            import matplotlib.pyplot as plt
             fig_foram_hist = plt.figure(figsize=(5, 4))
             plt.hist(df['Foraminifera_Count'], bins=10, color='skyblue', edgecolor='black')
             plt.axvline(mean_foram, color='red', linestyle='dashed', linewidth=1, label=f"Mean: {mean_foram:.2f}")
@@ -253,12 +256,13 @@ def main():
         st.write(
             """
             **Correlation** helps us understand if higher Foraminifera counts generally accompany 
-            higher or lower Calcite percentages, and vice versa.  
-            A strong correlation (positive or negative) could be geologically significant.
+            higher or lower Calcite percentages. 
             """
         )
+        import seaborn as sns
         fig_corr = plt.figure(figsize=(4, 3))
-        sns.heatmap(df[['Foraminifera_Count', 'Calcite_Percentage']].corr(), annot=True, cmap='coolwarm', vmin=-1, vmax=1)
+        sns.heatmap(df[['Foraminifera_Count', 'Calcite_Percentage']].corr(),
+                    annot=True, cmap='coolwarm', vmin=-1, vmax=1)
         plt.title("Correlation Heatmap")
         st.pyplot(fig_corr)
 
@@ -267,12 +271,11 @@ def main():
             **How to interpret correlation:**  
             - If the correlation is close to +1, the two variables tend to increase together.  
             - If it's near -1, one variable tends to increase while the other decreases.  
-            - If it's around 0, there's no clear linear relationship.
+            - If it's around 0, there's no strong linear relationship.
             """
         )
         
         st.write("### Overlaid Histograms (Bonus View)")
-        st.write("Comparing the distributions of Foraminifera Count and Calcite Percentage in one chart can reveal overall variance.")
         fig_overlay = plt.figure(figsize=(7, 4))
         plt.hist(df['Foraminifera_Count'], bins=12, alpha=0.5, label='Foraminifera', color='blue')
         plt.hist(df['Calcite_Percentage'], bins=12, alpha=0.5, label='Calcite %', color='orange')
@@ -285,16 +288,32 @@ def main():
         st.info(
             """
             **Summary & Teaching Notes:**  
-            - This step-by-step approach shows how different visualizations (histograms, box plots, scatter plots, correlation matrix) 
-              can be used to glean insights from geological data.  
-            - Emphasize how outliers, skew, and correlation can inform or mislead geoscientific interpretations.
-            - In real-world scenarios, always consider the geological context (depositional environments, diagenetic processes, etc.) 
-              when deciding whether outliers are anomalies or data errors.
+            - Different visualizations (histograms, box plots, scatter plots, correlation matrix) 
+              can reveal insights about outliers, skew, and relationships.  
+            - Always consider geological context when deciding if outliers are anomalies or data errors.
             """
         )
-
     else:
         st.warning("Use the sidebar to generate and analyze your dataset.")
+
+def main():
+    """
+    Multipage logic using a selectbox in the sidebar to choose which page to display.
+    """
+    st.set_page_config(layout="wide", page_title="Multpage App: Paleo vs. Probability Axioms")
+
+    # Create a sidebar selector for pages
+    st.sidebar.title("Navigation")
+    selected_page = st.sidebar.selectbox(
+        "Go to Page:",
+        ["Dataset Generation", "Probability Axioms"]
+    )
+
+    if selected_page == "Dataset Generation":
+        paleo_data_page()
+    elif selected_page == "Probability Axioms":
+        # Call the main function from axiom.py
+        axiom.main()
 
 if __name__ == "__main__":
     main()
