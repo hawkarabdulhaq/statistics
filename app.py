@@ -51,7 +51,7 @@ def generate_dataset(num_samples: int, foram_std: float, variation: int) -> pd.D
 
 def main():
     # ---------------------------------------------------
-    # TOP SECTION: Title and Acknowledgments
+    # TOP SECTION: Setting page config & showing banner
     # ---------------------------------------------------
     st.set_page_config(
         page_title="Basic Statistical Understanding",
@@ -59,16 +59,8 @@ def main():
         initial_sidebar_state="expanded"
     )
 
-    # Mentioning University of Szeged and author on top
-    st.markdown(
-        """
-        ## University of Szeged Department of Atmospheric and Geospatial Data Sciences  
-        ### by ABDULHAQ Hawkar
-        
-        # Basic Statistical Understanding
-        ---
-        """
-    )
+    # Display banner image (ensure 'banner.png' is in the same directory or an accessible path)
+    st.image("banner.png", use_column_width=True)
 
     # ------------------ SIDEBAR ------------------
     st.sidebar.title("Dataset Controls")
