@@ -3,9 +3,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-
-# Setting a default path to save the dataset (adjust as needed).
-SAVE_PATH = r"C:\Users\Source Tech Co\Desktop\Python\Classroom\paleo_dataset.csv"
+import io  # For creating in-memory file-like objects
 
 def generate_dataset(num_samples: int, foram_std: float, variation: int) -> pd.DataFrame:
     """
@@ -23,11 +21,11 @@ def generate_dataset(num_samples: int, foram_std: float, variation: int) -> pd.D
     
     # Normal distribution for Foraminifera Counts
     foram_counts = np.random.normal(loc=mean_foram, scale=foram_std, size=num_samples)
-    foram_counts = np.clip(foram_counts, a_min=0, a_max=None)  # no negative values
+    foram_counts = np.clip(foram_counts, a_min=0, a_max=None)  # Avoid negative values
 
     # Normal distribution for Calcite Percentage
     calcite_perc = np.random.normal(loc=mean_calcite, scale=calcite_std, size=num_samples)
-    calcite_perc = np.clip(calcite_perc, a_min=0, a_max=100)  # 0 to 100% range
+    calcite_perc = np.clip(calcite_perc, a_min=0, a_max=100)  # Restrict to 0-100%
 
     # Round for clarity
     foram_counts = [round(val) for val in foram_counts]
@@ -78,6 +76,7 @@ def main():
         """
         **Step 1:** Adjust the parameters to generate your dataset.  
         **Step 2:** Click the button below to create and visualize the data.  
+        **Step 3:** Download the CSV file if you want to save it locally.
         """
     )
     
@@ -112,12 +111,18 @@ def main():
         # Generate Dataset
         df = generate_dataset(num_samples, foram_std, variation)
         
-        # Save to CSV
-        try:
-            df.to_csv(SAVE_PATH, index=False)
-            st.success(f"Dataset successfully saved at {SAVE_PATH}")
-        except Exception as e:
-            st.error(f"Error saving dataset: {e}")
+        # Create a CSV file in memory (not saved locally)
+        csv_buffer = io.StringIO()
+        df.to_csv(csv_buffer, index=False)
+        csv_data = csv_buffer.getvalue()  # This is the CSV as a string
+        
+        # Provide a download button for the CSV
+        st.download_button(
+            label="Download CSV",
+            data=csv_data,
+            file_name="paleo_dataset.csv",
+            mime="text/csv"
+        )
 
         # Part 1: Data Preview & Quick Stats
         st.header("Part 1: Data Overview")
@@ -136,7 +141,7 @@ def main():
                 """
             )
         
-        # Calculate basic stats for color-coded metrics
+        # Calculate basic stats
         mean_foram = df['Foraminifera_Count'].mean()
         median_foram = df['Foraminifera_Count'].median()
         mean_calcite = df['Calcite_Percentage'].mean()
