@@ -7,11 +7,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import io  # For creating in-memory file-like objects
 
-# Import your axiom page (existing)
-import axiom
-
-# Import the new probability page script
-import prob
+# Import existing pages
+import axiom    # Probability Axioms
+import prob     # Probability (Fossil A & B)
 
 # ──────────────────────────────────────────────────────────────────────────
 # 1. SET PAGE CONFIG (MUST BE FIRST STREAMLIT COMMAND IN THIS SCRIPT)
@@ -22,6 +20,10 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+
+# ──────────────────────────────────────────────────────────────────────────
+# DATASET GENERATION & BASIC STATISTICS PAGE
+# ──────────────────────────────────────────────────────────────────────────
 def generate_dataset(num_samples: int, foram_std: float, variation: int) -> pd.DataFrame:
     """
     Your existing function for generating a paleoenvironmental dataset.
@@ -65,13 +67,11 @@ def generate_dataset(num_samples: int, foram_std: float, variation: int) -> pd.D
     }
     return pd.DataFrame(data)
 
-def paleo_data_page():
+def basic_statistics_page():
     """
-    Displays the main page for generating the paleo dataset and visualizing it.
-    This code was originally calling st.set_page_config(), 
-    but now we rely on the single call at the top of app.py.
+    Displays the "Basic Statistics" page for generating the paleo dataset 
+    and visualizing it with histograms, box plots, correlation, etc.
     """
-
     # Optional banner image
     st.image("banner.png", use_container_width=True)
 
@@ -104,9 +104,9 @@ def paleo_data_page():
 
     st.write(
         """
-        This app demonstrates how to generate and interpret a synthetic paleoenvironmental dataset.
-        We'll explore **basic statistics**, **outlier detection**, **distributions**, and **correlations** 
-        through various **data visualizations** and analyses.
+        This page demonstrates how to generate and interpret a synthetic paleoenvironmental dataset.
+        We'll explore **basic statistics**, **outlier detection**, **distributions**, 
+        and **correlations** through various **data visualizations** and analyses.
         """
     )
     
@@ -302,34 +302,42 @@ def paleo_data_page():
     else:
         st.warning("Use the sidebar to generate and analyze your dataset.")
 
+# ──────────────────────────────────────────────────────────────────────────
+# MAIN: BUTTON-BASED NAVIGATION
+# ──────────────────────────────────────────────────────────────────────────
 def main():
     """
-    Multipage logic using a selectbox in the sidebar to choose which page to display.
-
-    We maintain the first two pages exactly as before:
-      1) Dataset Generation
-      2) Probability Axioms
-
-    Then we add the third page:
-      3) Probability (Fossil A & B) -> from the prob.py script
+    We have three pages:
+      1) Basic Statistics (this file's 'basic_statistics_page' function)
+      2) Probability Axioms (in axiom.py)
+      3) Probability (Fossil A & B) (in prob.py)
+    
+    Instead of a selectbox, we use 3 buttons for navigation.
+    We'll store the user's current page in a session state variable "current_page".
     """
-    st.sidebar.title("Navigation")
-    selected_page = st.sidebar.selectbox(
-        "Go to Page:",
-        [
-            "Dataset Generation",        # existing page 1
-            "Probability Axioms",        # existing page 2
-            "Probability (Fossil A & B)" # NEW third page
-        ]
-    )
+    st.sidebar.title("Navigation via Buttons")
 
-    if selected_page == "Dataset Generation":
-        paleo_data_page()
-    elif selected_page == "Probability Axioms":
-        # Call the main function from axiom.py (existing second page)
+    # Initialize session state if not present
+    if "current_page" not in st.session_state:
+        st.session_state["current_page"] = "Basic Statistics"
+
+    col_nav = st.sidebar.columns(1)  # single column in sidebar
+    # Create 3 buttons, one for each page
+    if st.sidebar.button("Basic Statistics"):
+        st.session_state["current_page"] = "Basic Statistics"
+    if st.sidebar.button("Probability Axioms"):
+        st.session_state["current_page"] = "Probability Axioms"
+    if st.sidebar.button("Probability (Fossil A & B)"):
+        st.session_state["current_page"] = "Probability (Fossil A & B)"
+
+    # Now decide which page to show
+    current_page = st.session_state["current_page"]
+
+    if current_page == "Basic Statistics":
+        basic_statistics_page()
+    elif current_page == "Probability Axioms":
         axiom.main()
-    elif selected_page == "Probability (Fossil A & B)":
-        # Call the main function from prob.py (NEW third page)
+    elif current_page == "Probability (Fossil A & B)":
         prob.main()
 
 if __name__ == "__main__":
