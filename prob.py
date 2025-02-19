@@ -3,50 +3,100 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 
-def create_dataset():
+def create_dataset(num_layers, count_A, count_B, overlap_AB, count_sandstone):
     """
-    Creates a dataset of 12 layers. Each row indicates:
-      - FossilA (Yes/No): Presence of Fossil A
-      - FossilB (Yes/No): Presence of Fossil B
-      - Sandstone (Yes/No): Whether the layer is sandstone
+    Dynamically creates a dataset of `num_layers` layers.
+    Each row indicates:
+      - FossilA (Yes/No)
+      - FossilB (Yes/No)
+      - Sandstone (Yes/No)
 
-    The dataset is deliberately constructed so that:
-    - P(A) = 6/12 = 0.50
-    - P(B) = 6/12 = 0.50
-    - P(A∩B) = 3/12 = 0.25
-    - P(A∪B) = 9/12 = 0.75
-    - P(B|A) = (A∩B)/P(A) = 0.25 / 0.50 = 0.50
+    The user controls:
+      - How many layers exist in total (num_layers).
+      - How many layers have Fossil A (count_A).
+      - How many layers have Fossil B (count_B).
+      - How many layers have BOTH Fossil A & B (overlap_AB).
+      - How many layers are Sandstone (count_sandstone).
+
+    Any random assignment beyond these constraints is allocated by shuffling.
     """
+    # Basic validation
+    if overlap_AB > count_A or overlap_AB > count_B:
+        raise ValueError("Overlap (A∩B) cannot exceed either count_A or count_B.")
+
+    if count_A > num_layers or count_B > num_layers or count_sandstone > num_layers:
+        raise ValueError("Counts cannot exceed the total number of layers.")
+
+    # Start by creating a list of layer IDs
+    layer_ids = list(range(1, num_layers + 1))
+
+    # We will first assign overlap_AB to some random subset of layers
+    # Then assign the remaining A-only and B-only sets
+    # Then assign any leftover as no fossils
+    # Finally, assign which layers are Sandstone.
+
+    # Step 1: Create an empty assignment
+    fossilA = [False]*num_layers
+    fossilB = [False]*num_layers
+
+    # Step 2: Randomly pick which layers get A∩B
+    indices = np.arange(num_layers)
+    np.random.shuffle(indices)  # Shuffle indices for random assignment
+
+    # Overlap layers
+    overlap_indices = indices[:overlap_AB]
+    for idx in overlap_indices:
+        fossilA[idx] = True
+        fossilB[idx] = True
+
+    # Step 3: Assign additional A-only layers
+    remaining_indices = indices[overlap_AB:]
+    needed_A_only = count_A - overlap_AB
+    if needed_A_only > 0:
+        A_only_indices = remaining_indices[:needed_A_only]
+        for idx in A_only_indices:
+            fossilA[idx] = True
+
+        remaining_indices = remaining_indices[needed_A_only:]
+
+    # Step 4: Assign additional B-only layers
+    needed_B_only = count_B - overlap_AB
+    if needed_B_only > 0:
+        B_only_indices = remaining_indices[:needed_B_only]
+        for idx in B_only_indices:
+            fossilB[idx] = True
+
+        remaining_indices = remaining_indices[needed_B_only:]
+
+    # The rest have no fossils
+
+    # Step 5: Assign Sandstone
+    # We randomly pick 'count_sandstone' from the total layers
+    all_indices = np.arange(num_layers)
+    np.random.shuffle(all_indices)
+    sandstone_flags = [False]*num_layers
+    sandstone_selected = all_indices[:count_sandstone]
+    for idx in sandstone_selected:
+        sandstone_flags[idx] = True
+
+    # Finally build a DataFrame
     data = {
-        'LayerID':      list(range(1, 13)),
-        # Fossil A present in layers: 1,2,4,7,9,12 (6 total)
-        'FossilA':      ['Yes','Yes','No','Yes','No','No','Yes','No','Yes','No','No','Yes'],
-        # Fossil B present in layers: 2,6,7,8,9,10 (6 total)
-        # Overlap with A in layers: 2,7,9 (3 total) => P(A∩B)=3/12=0.25
-        'FossilB':      ['No','Yes','No','No','No','Yes','Yes','Yes','Yes','Yes','No','No'],
-        # Sandstone can be arbitrary; doesn't affect these probability results.
-        'Sandstone':    ['Yes','No','Yes','Yes','No','No','Yes','No','Yes','No','Yes','No']
+        'LayerID': [f"{i}" for i in layer_ids],
+        'FossilA': ["Yes" if a else "No" for a in fossilA],
+        'FossilB': ["Yes" if b else "No" for b in fossilB],
+        'Sandstone': ["Yes" if s else "No" for s in sandstone_flags]
     }
-    return pd.DataFrame(data)
+    df = pd.DataFrame(data)
+    return df
 
 def calculate_probabilities(df):
     """
     Calculates five key probabilities:
-
-    1) P(A): Probability of finding Fossil A in a randomly chosen layer.
-       - Computed as (# layers with A) / (total layers).
-
-    2) P(B): Probability of finding Fossil B in a randomly chosen layer.
-       - Computed similarly to P(A).
-
-    3) P(A ∩ B): Probability of finding both Fossil A and Fossil B together.
-       - Computed as (# layers with both) / (total layers).
-
-    4) P(A ∪ B): Probability of finding at least one fossil (A or B).
-       - Uses the Addition Rule: P(A) + P(B) - P(A ∩ B).
-
-    5) P(B|A): Conditional probability of finding Fossil B if Fossil A is known to be present.
-       - Computed as [P(A ∩ B)] / [P(A)], if P(A) > 0.
+      1) P(A)
+      2) P(B)
+      3) P(A ∩ B)
+      4) P(A ∪ B)
+      5) P(B | A)
     """
     total_layers = len(df)
 
@@ -55,11 +105,19 @@ def calculate_probabilities(df):
     df['HasB'] = df['FossilB'].apply(lambda x: x == 'Yes')
 
     # Count occurrences
-    A_count = df['HasA'].sum()         # # of layers with Fossil A
-    B_count = df['HasB'].sum()         # # of layers with Fossil B
-    AB_count = ((df['HasA']) & (df['HasB'])).sum()  # # with both A and B
+    A_count = df['HasA'].sum()
+    B_count = df['HasB'].sum()
+    AB_count = ((df['HasA']) & (df['HasB'])).sum()
 
     # Compute probabilities
+    if total_layers == 0:
+        return {
+            'P(A)': 0,
+            'P(B)': 0,
+            'P(A∩B)': 0,
+            'P(A∪B)': 0,
+            'P(B|A)': 0
+        }
     pA = A_count / total_layers
     pB = B_count / total_layers
     pA_and_B = AB_count / total_layers
@@ -87,7 +145,7 @@ def convert_binary(df):
 def plot_probabilities(prob_dict):
     """
     Creates a bar chart for the computed probabilities:
-    - P(A), P(B), P(A∩B), P(A∪B), P(B|A).
+      - P(A), P(B), P(A∩B), P(A∪B), P(B|A).
     """
     labels = list(prob_dict.keys())
     values = list(prob_dict.values())
@@ -102,94 +160,93 @@ def plot_probabilities(prob_dict):
     # Place numeric labels above the bars
     for bar in bars:
         height = bar.get_height()
-        ax.text(bar.get_x() + bar.get_width()/2, height+0.02, f"{height:.2f}",
-                ha='center', va='bottom', fontsize=9)
+        ax.text(
+            bar.get_x() + bar.get_width()/2,
+            height + 0.02,
+            f"{height:.2f}",
+            ha='center',
+            va='bottom',
+            fontsize=9
+        )
 
     plt.tight_layout()
     return fig
 
 def main():
-    st.title("Geological Probability Demo")
-    st.subheader("Fossil A and Fossil B Occurrences in 12 Layers")
+    st.title("Dynamic Geological Probability Demo")
+    st.subheader("Customize the Dataset (Fossil A, Fossil B, and Sandstone)")
 
-    # 1. Create the dataset, plus a binary version for easy table display
-    df = create_dataset()
+    st.write("Use the sliders below to define how many layers will have Fossil A, Fossil B, overlap, and sandstone.")
+
+    # 1. Sliders for dataset configuration
+    num_layers = st.slider("Total Layers", min_value=1, max_value=30, value=12)
+    count_A = st.slider("Layers with Fossil A", min_value=0, max_value=num_layers, value=6)
+    count_B = st.slider("Layers with Fossil B", min_value=0, max_value=num_layers, value=6)
+
+    # Overlap: can't exceed the min of count_A or count_B
+    max_overlap = min(count_A, count_B)
+    overlap_AB = st.slider("Overlap (A ∩ B)", min_value=0, max_value=max_overlap, value=3)
+
+    count_sandstone = st.slider("Layers with Sandstone", min_value=0, max_value=num_layers, value=5)
+
+    # Generate the dataset
+    df = create_dataset(
+        num_layers=num_layers,
+        count_A=count_A,
+        count_B=count_B,
+        overlap_AB=overlap_AB,
+        count_sandstone=count_sandstone
+    )
+
+    # Convert to binary for display
     df_binary = convert_binary(df)
 
-    # Show the dataset
-    st.write("### 1. Dataset Overview (Numeric Table)")
-    st.write("Below, **1** indicates 'Yes' and **0** indicates 'No'.")
-    st.table(df_binary)
+    st.write("### 1. Generated Dataset")
+    st.dataframe(df_binary)
 
     # 2. Calculate probability measures
     prob_dict = calculate_probabilities(df)
 
-    # 2A. Explanation of Each Probability
-    st.write("### 2. Explanation of Probability Measures")
-
+    st.write("### 2. Probability Measures")
     st.markdown(
         """
-        - **P(A):** Probability that a layer contains Fossil A.
-        - **P(B):** Probability that a layer contains Fossil B.
-        - **P(A ∩ B):** Probability that both fossils appear **together** in the same layer.
-        - **P(A ∪ B):** Probability of finding **at least one** fossil (A or B).
-          - Uses the **Addition Rule**: \( P(A) + P(B) - P(A \cap B) \).
-        - **P(B | A):** **Conditional Probability** of finding Fossil B given that Fossil A is present.
-          - Uses \( P(A \cap B) / P(A) \).
+        - **P(A):** Probability that a layer contains Fossil A.\n
+        - **P(B):** Probability that a layer contains Fossil B.\n
+        - **P(A ∩ B):** Probability that both fossils appear **together**.\n
+        - **P(A ∪ B):** Probability of finding **at least one** fossil (A or B).\n
+          - Uses the Addition Rule: \\( P(A) + P(B) - P(A \\cap B) \\).\n
+        - **P(B | A):** **Conditional Probability** of B given A.\n
+          - \\( P(A \\cap B) / P(A) \\).
         """
     )
 
-    # 2B. Show the results
-    st.write("Below are the **calculated values** for each:")
+    # Display them
     for k, v in prob_dict.items():
         st.write(f"- **{k}** = {v:.2f}")
 
-    # 2C. Additional context: exact values in this dataset
-    st.info(
-        "**How are these exact probabilities derived?**\n\n"
-        f"- **P(A)** = 6 out of 12 layers have Fossil A → **0.50**\n"
-        f"- **P(B)** = 6 out of 12 layers have Fossil B → **0.50**\n"
-        f"- **P(A ∩ B)** = 3 out of 12 layers have both A and B → **0.25**\n"
-        f"- **P(A ∪ B)** = 9 out of 12 layers have A or B (or both) → **0.75**\n"
-        "  (calculated also by `0.50 + 0.50 - 0.25 = 0.75`)\n"
-        f"- **P(B|A)** = (P(A ∩ B)) / P(A) = `0.25 / 0.50` → **0.50**"
-    )
-
-    # 3. Visualize these probabilities with a bar chart
+    # 3. Probability Bar Chart
     st.write("### 3. Probability Bar Chart")
     fig = plot_probabilities(prob_dict)
     st.pyplot(fig)
 
-    # 4. Why This Matters
+    # 4. Explanation
+    st.write("---")
     st.markdown(
         """
-        ---
-        ## Why These Results Are Important
+        ## Why This Matters
 
-        1. **Fossil Distribution Insights:**
-           - Seeing that both *Fossil A* and *Fossil B* occur in half of the layers (0.50 each) 
-             helps geologists gauge how common or rare these fossils are in the studied formation.
+        By dynamically adjusting how many layers have Fossil A, Fossil B, 
+        and their overlap, you can see how the probabilities shift:
 
-        2. **Co-occurrence (A ∩ B):**
-           - A 0.25 probability means 25% of layers host both fossils together, suggesting 
-             overlapping environmental or temporal factors.
+        - **P(A)** & **P(B)** rise or fall based on how frequently each fossil is found.
+        - **P(A ∩ B)** grows if you increase overlap (A∩B), reflecting more co-occurrence.
+        - **P(A ∪ B)** indicates how often you find at least one fossil — it grows if A and B are both common.
+        - **P(B|A)** shows how likely B is if A is already there; it increases if you raise the overlap 
+          relative to how many total layers have A.
 
-        3. **Union (A ∪ B):**
-           - With a 0.75 probability, there's a 75% chance any given layer has at least one fossil,
-             which is quite high and suggests rich fossil content overall.
-
-        4. **Conditional Probability (B|A):**
-           - If you already know a layer has *Fossil A*, there's a 50% chance (*P(B|A)=0.50*) it 
-             also contains *Fossil B*. This conditional aspect is vital in practical geology:
-             finding *Fossil A* may lead you to suspect *Fossil B* too, prompting more targeted 
-             sampling or correlation strategies.
-
-        ---
-        ### Explore Further
-        - Try editing the dataset to change the number of 'Yes' layers for A or B.
-        - Observe how *all* these probabilities adjust accordingly.
-        - Add extra columns (like *Fossil C* or *Shale*) to see how more factors 
-          influence *co-occurrence* and *conditional probability*.
+        This interactive approach helps illustrate **probability rules** in a real-world
+        geological context, where each "layer" could be a stratigraphic interval in a core or 
+        outcrop, and presence/absence of fossils can guide paleoenvironmental interpretations.
         """
     )
 
