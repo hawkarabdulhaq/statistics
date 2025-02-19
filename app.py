@@ -16,35 +16,66 @@ st.set_page_config(
 
 def home_page():
     """
-    Display a simple welcome screen or instructions for the user.
+    Displays the Home page with a banner, a welcome message, and footer.
     """
-    st.title("Home")
+    # Display banner image
+    st.image("banner.png", use_column_width=True)
+
+    # Home title and welcome message
+    st.title("Welcome to the Geological Learning Portal")
+    st.markdown(
+        """
+        **This portal is made by Abdulhaq Hawkar**  
+        as an accessory supplement material for students to engage in dynamic learning and interact with examples of statistics in geology.
+
+        For any questions, please contact:  
+        **[hawkar.ali.abdulhaq@szte.hu](mailto:hawkar.ali.abdulhaq@szte.hu)**
+        """
+    )
+    
+    st.markdown("---")
+    st.subheader("Navigation Instructions")
     st.write(
         """
-        Welcome to the Multi-Page Geological App!  
+        Use the buttons in the sidebar to navigate through the portal:
         
-        **Navigation**: Use the buttons in the sidebar to explore:
-        - **Basic Statistics**: Generate a synthetic paleoenvironmental dataset, visualize basic statistics, 
-          detect outliers, and interpret distributions.
-        - **Probability Axioms**: Dive deeper into Bayes’ theorem, conditional probabilities, and real-world examples.
-        - **Probability (Fossil A & B)**: An interactive page to explore how presence/absence data and co-occurrence 
-          probabilities are computed in geology.
-        
-        You can return to this **Home** page at any time using the sidebar.
+        - **Basic Statistics**: Generate a synthetic paleoenvironmental dataset, explore basic statistics, visualize distributions, and analyze data.
+        - **Probability Axioms**: Delve into Bayes’ theorem, conditional probabilities, and related real-world examples.
+        - **Probability (Fossil A & B)**: Interactively explore how fossil presence/absence data are used to calculate co-occurrence probabilities.
         """
+    )
+    
+    st.markdown("---")
+    # Add an interactive element, for example a poll or a question.
+    st.info("Feel free to click the navigation buttons on the sidebar to start exploring!")
+
+    # Footer (displayed at the bottom of the Home page)
+    st.markdown(
+        """
+        <hr>
+        <div style="text-align: center; font-size: 0.9em;">
+            © 2023 Abdulhaq Hawkar | For any inquiries, contact <a href="mailto:hawkar.ali.abdulhaq@szte.hu">hawkar.ali.abdulhaq@szte.hu</a>
+        </div>
+        """,
+        unsafe_allow_html=True
     )
 
 def main():
     """
     Main controller for page navigation using button-based approach.
+    There are four pages:
+      - Home
+      - Basic Statistics (from basic.py)
+      - Probability Axioms (from axiom.py)
+      - Probability (Fossil A & B) (from prob.py)
     """
     st.sidebar.title("Navigation via Buttons")
 
-    # Initialize session state for tracking current page
+    # Initialize session state if not present
     if "current_page" not in st.session_state:
         st.session_state["current_page"] = "Home"
 
-    # Create 4 buttons in the sidebar
+    # Navigation buttons in the sidebar
     if st.sidebar.button("Home"):
         st.session_state["current_page"] = "Home"
     if st.sidebar.button("Basic Statistics"):
@@ -65,7 +96,6 @@ def main():
         axiom.main()
     elif current_page == "Probability (Fossil A & B)":
         prob.main()
-
 
 if __name__ == "__main__":
     main()
