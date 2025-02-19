@@ -16,17 +16,17 @@ st.set_page_config(
 
 def home_page():
     """
-    Displays the Home page with a banner, a welcome message, and footer.
+    Displays the Home page with a banner, a welcome message, and an interactive footer.
     """
-    # Display banner image
-    st.image("banner.png", use_column_width=True)
+    # Display banner image using use_container_width (replacing deprecated use_column_width)
+    st.image("banner.png", use_container_width=True)
 
     # Home title and welcome message
-    st.title("Welcome to the Geological Learning Portal")
+    st.title("Welcome to ABDULHAQ Hawkar's Learning Portal")
     st.markdown(
         """
-        **This portal is made by Abdulhaq Hawkar**  
-        as an accessory supplement material for students to engage in dynamic learning and interact with examples of statistics in geology.
+        **This portal is created by ABDULHAQ Hawkar**  
+        to serve as an accessory supplement material for students, enabling dynamic learning through interactive examples of statistics in geology.
 
         For any questions, please contact:  
         **[hawkar.ali.abdulhaq@szte.hu](mailto:hawkar.ali.abdulhaq@szte.hu)**
@@ -40,21 +40,20 @@ def home_page():
         Use the buttons in the sidebar to navigate through the portal:
         
         - **Basic Statistics**: Generate a synthetic paleoenvironmental dataset, explore basic statistics, visualize distributions, and analyze data.
-        - **Probability Axioms**: Delve into Bayes’ theorem, conditional probabilities, and related real-world examples.
-        - **Probability (Fossil A & B)**: Interactively explore how fossil presence/absence data are used to calculate co-occurrence probabilities.
+        - **Probability Axioms**: Dive deeper into Bayes’ theorem, conditional probabilities, and related real-world examples.
+        - **Probability (Fossil A & B)**: Interactively explore how fossil presence/absence data is used to calculate co-occurrence probabilities.
         """
     )
     
     st.markdown("---")
-    # Add an interactive element, for example a poll or a question.
     st.info("Feel free to click the navigation buttons on the sidebar to start exploring!")
 
-    # Footer (displayed at the bottom of the Home page)
+    # Footer displayed at the bottom of the Home page
     st.markdown(
         """
         <hr>
         <div style="text-align: center; font-size: 0.9em;">
-            © 2023 Abdulhaq Hawkar | For any inquiries, contact <a href="mailto:hawkar.ali.abdulhaq@szte.hu">hawkar.ali.abdulhaq@szte.hu</a>
+            © 2023 ABDULHAQ Hawkar | For inquiries, contact <a href="mailto:hawkar.ali.abdulhaq@szte.hu">hawkar.ali.abdulhaq@szte.hu</a>
         </div>
         """,
         unsafe_allow_html=True
@@ -71,11 +70,11 @@ def main():
     """
     st.sidebar.title("Navigation via Buttons")
 
-    # Initialize session state if not present
+    # Initialize session state for tracking current page
     if "current_page" not in st.session_state:
         st.session_state["current_page"] = "Home"
 
-    # Navigation buttons in the sidebar
+    # Create navigation buttons in the sidebar
     if st.sidebar.button("Home"):
         st.session_state["current_page"] = "Home"
     if st.sidebar.button("Basic Statistics"):
