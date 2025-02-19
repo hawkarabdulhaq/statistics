@@ -7,7 +7,10 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import io  # For creating in-memory file-like objects
 
-# Import your probability page
+# Import your axiom page (existing)
+import axiom
+
+# Import the new probability page script
 import prob
 
 # ──────────────────────────────────────────────────────────────────────────
@@ -15,7 +18,7 @@ import prob
 # ──────────────────────────────────────────────────────────────────────────
 st.set_page_config(
     layout="wide",
-    page_title="Multipage App: Paleo vs. Probability Axioms",
+    page_title="Multpage App: Paleo vs. Probability Axioms",
     initial_sidebar_state="expanded"
 )
 
@@ -65,6 +68,8 @@ def generate_dataset(num_samples: int, foram_std: float, variation: int) -> pd.D
 def paleo_data_page():
     """
     Displays the main page for generating the paleo dataset and visualizing it.
+    This code was originally calling st.set_page_config(), 
+    but now we rely on the single call at the top of app.py.
     """
 
     # Optional banner image
@@ -299,20 +304,32 @@ def paleo_data_page():
 
 def main():
     """
-    Main multipage logic with a sidebar selectbox to navigate between:
-      - Dataset Generation
-      - Probability Axioms
+    Multipage logic using a selectbox in the sidebar to choose which page to display.
+
+    We maintain the first two pages exactly as before:
+      1) Dataset Generation
+      2) Probability Axioms
+
+    Then we add the third page:
+      3) Probability (Fossil A & B) -> from the prob.py script
     """
     st.sidebar.title("Navigation")
     selected_page = st.sidebar.selectbox(
         "Go to Page:",
-        ["Dataset Generation", "Probability Axioms"]
+        [
+            "Dataset Generation",        # existing page 1
+            "Probability Axioms",        # existing page 2
+            "Probability (Fossil A & B)" # NEW third page
+        ]
     )
 
     if selected_page == "Dataset Generation":
         paleo_data_page()
     elif selected_page == "Probability Axioms":
-        # Call the main function from prob.py
+        # Call the main function from axiom.py (existing second page)
+        axiom.main()
+    elif selected_page == "Probability (Fossil A & B)":
+        # Call the main function from prob.py (NEW third page)
         prob.main()
 
 if __name__ == "__main__":
