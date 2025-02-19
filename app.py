@@ -7,15 +7,15 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import io  # For creating in-memory file-like objects
 
-# Import your axiom page
-import axiom
+# Import your probability page
+import prob
 
 # ──────────────────────────────────────────────────────────────────────────
 # 1. SET PAGE CONFIG (MUST BE FIRST STREAMLIT COMMAND IN THIS SCRIPT)
 # ──────────────────────────────────────────────────────────────────────────
 st.set_page_config(
     layout="wide",
-    page_title="Multpage App: Paleo vs. Probability Axioms",
+    page_title="Multipage App: Paleo vs. Probability Axioms",
     initial_sidebar_state="expanded"
 )
 
@@ -65,8 +65,6 @@ def generate_dataset(num_samples: int, foram_std: float, variation: int) -> pd.D
 def paleo_data_page():
     """
     Displays the main page for generating the paleo dataset and visualizing it.
-    This code was originally calling st.set_page_config(), 
-    but now we rely on the single call at the top of app.py.
     """
 
     # Optional banner image
@@ -301,11 +299,10 @@ def paleo_data_page():
 
 def main():
     """
-    Multipage logic using a selectbox in the sidebar to choose which page to display.
+    Main multipage logic with a sidebar selectbox to navigate between:
+      - Dataset Generation
+      - Probability Axioms
     """
-    # The line below was moved to the top of the file
-    # st.set_page_config(layout="wide", page_title="Multpage App: Paleo vs. Probability Axioms")
-
     st.sidebar.title("Navigation")
     selected_page = st.sidebar.selectbox(
         "Go to Page:",
@@ -315,8 +312,8 @@ def main():
     if selected_page == "Dataset Generation":
         paleo_data_page()
     elif selected_page == "Probability Axioms":
-        # Call the main function from axiom.py
-        axiom.main()
+        # Call the main function from prob.py
+        prob.main()
 
 if __name__ == "__main__":
     main()
