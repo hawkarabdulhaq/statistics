@@ -18,7 +18,7 @@ def home_page():
     """
     Displays the Home page with a banner, a welcome message, and an interactive footer.
     """
-    # Display banner image using use_container_width (replacing deprecated use_column_width)
+    # Display banner image using use_container_width (new parameter)
     st.image("banner.png", use_container_width=True)
 
     # Home title and welcome message
@@ -61,20 +61,18 @@ def home_page():
 
 def main():
     """
-    Main controller for page navigation using button-based approach.
+    Main controller for page navigation.
     There are four pages:
       - Home
       - Basic Statistics (from basic.py)
       - Probability Axioms (from axiom.py)
       - Probability (Fossil A & B) (from prob.py)
     """
-    st.sidebar.title("Navigation via Buttons")
-
     # Initialize session state for tracking current page
     if "current_page" not in st.session_state:
         st.session_state["current_page"] = "Home"
 
-    # Create navigation buttons in the sidebar
+    # Sidebar navigation buttons
     if st.sidebar.button("Home"):
         st.session_state["current_page"] = "Home"
     if st.sidebar.button("Basic Statistics"):
