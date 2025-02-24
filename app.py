@@ -5,14 +5,14 @@ import basic
 import axiom
 import prob
 import dataset
-import tutorial  # <-- New Tutorials page
+import tutorial1  # <-- New tutorial1s page
 
 # ──────────────────────────────────────────────────────────────────────────
 # 1. SET PAGE CONFIG (MUST BE FIRST STREAMLIT COMMAND IN THIS SCRIPT)
 # ──────────────────────────────────────────────────────────────────────────
 st.set_page_config(
     layout="wide",
-    page_title="Multi-Page App: Home | Basic Stats | Probability Axioms | Probability | Dataset | Tutorials",
+    page_title="Multi-Page App: Home | Basic Stats | Probability Axioms | Probability | Dataset | tutorial1s",
     initial_sidebar_state="expanded"
 )
 
@@ -45,7 +45,7 @@ def home_page():
         - **Probability Axioms**: Dive deeper into Bayes’ theorem, conditional probabilities, and related real-world examples.
         - **Probability (Fossil A & B)**: Interactively explore how fossil presence/absence data is used to calculate co-occurrence probabilities.
         - **Dataset**: Fetch earthquake event data from the USGS API and download the dataset as CSV.
-        - **Tutorials**: Step-by-step guides showing how to work with data, run analyses, and interpret results.
+        - **tutorial1s**: Step-by-step guides showing how to work with data, run analyses, and interpret results.
         """
     )
     
@@ -72,7 +72,7 @@ def main():
       - Probability Axioms (from axiom.py)
       - Probability (Fossil A & B) (from prob.py)
       - Dataset (from dataset.py)
-      - Tutorials (from tutorial.py)
+      - tutorial1s (from tutorial1.py)
     """
     # Initialize session state for tracking current page
     if "current_page" not in st.session_state:
@@ -89,8 +89,8 @@ def main():
         st.session_state["current_page"] = "Probability (Fossil A & B)"
     if st.sidebar.button("Dataset"):
         st.session_state["current_page"] = "Dataset"
-    if st.sidebar.button("Tutorials"):
-        st.session_state["current_page"] = "Tutorials"
+    if st.sidebar.button("tutorial1s"):
+        st.session_state["current_page"] = "tutorial1s"
 
     # Route to the selected page
     current_page = st.session_state["current_page"]
@@ -105,8 +105,8 @@ def main():
         prob.main()
     elif current_page == "Dataset":
         dataset.main()
-    elif current_page == "Tutorials":
-        tutorial.main()
+    elif current_page == "tutorial1s":
+        tutorial1.main()
 
 if __name__ == "__main__":
     main()
