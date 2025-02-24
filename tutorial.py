@@ -3,16 +3,13 @@ import streamlit as st
 def tutorial_page():
     """
     A page showcasing 6 tabs for tutorials. 
-    The first tab explains how to download 'earthquakes.csv', set up a Colab environment, 
-    and run the 'overview.py' script.
     """
-
     st.title("Tutorials")
 
     # Create 6 tabs
     tabs = st.tabs([
         "Tutorial 1: General Overview",
-        "Tutorial 2",
+        "Tutorial 2: Filter by Time Window",
         "Tutorial 3",
         "Tutorial 4",
         "Tutorial 5",
@@ -50,23 +47,22 @@ def tutorial_page():
                  from google.colab import drive
                  drive.mount('/content/drive')
                  ```
-               - Copy your `earthquakes.csv` file into a location such as `/content/sample_data/earthquakes.csv` 
-                 (or another directory you prefer).
+               - Copy your `earthquakes.csv` file into a location such as `/content/sample_data/earthquakes.csv`. 
 
             4. **Download `overview.py`**  
-               - Save the script below as `overview.py` (or download it from the provided source).  
-               - Make sure it is in the same Colab environment so you can run it.
+               - Save the script below as `overview.py`.  
+               - Ensure it's in the same Colab environment so you can run it.
 
             5. **Run `overview.py` in Colab**  
                - In a code cell, do:
                  ```python
                  !python overview.py
                  ```
-               - Check the output in the Colab cell output and/or logs.
-            
+               - Check the output in the Colab cell logs.
+
             6. **Analyze Results**  
-               - You'll see a **basic info** about the DataFrame, including shape, head, describe, etc.  
-               - A **histogram** of earthquake magnitudes.  
+               - You’ll see **data info** (shape, head, describe).  
+               - A **histogram** of quake magnitudes.  
                - A **scatter plot** of magnitude vs. depth.
 
             ---
@@ -74,7 +70,6 @@ def tutorial_page():
             """
         )
 
-        # Display code for overview.py in a code block
         overview_code = """\
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -115,17 +110,78 @@ plt.show()
 
         st.markdown(
             """
-            That’s it for **Tutorial 1**! Once you run `overview.py` in Colab, you should see printed summaries and the two plots as described. 
+            That’s it for **Tutorial 1**! Once you run `overview.py` in Colab, you should see printed summaries and the two plots. 
             Enjoy exploring your earthquake data!
             """
         )
 
     # ───────────────────────────────────────────────────────────────────
-    # TAB 2: PLACEHOLDER
+    # TAB 2: FILTER BY TIME WINDOW
     # ───────────────────────────────────────────────────────────────────
     with tabs[1]:
-        st.subheader("Tutorial 2")
-        st.write("Content for Tutorial 2 goes here...")
+        st.subheader("Tutorial 2: Filter & Explore Specific Time Windows")
+
+        st.markdown(
+            """
+            **Objective**: Let students pick a smaller time window to see if there are any interesting patterns.
+
+            **Approach**:
+            1. Filter the DataFrame for events **within a narrower date range** (e.g., one week, one day, or specific days).
+            2. Re-run the same printing commands (shape, head, describe) and compare results with the original dataset.
+            3. Generate the histogram and scatter plot again to see how the distribution changes with fewer events.
+
+            ---
+            **Example**: Suppose you only want events from `2024-01-10` to `2024-01-15`. 
+            In `overview.py`, right after loading `df`, you could add:
+            ```python
+            # Convert 'time' to datetime if not already done:
+            df['time'] = pd.to_datetime(df['time'])
+
+            # Filter by time range
+            start_date = '2024-01-10'
+            end_date   = '2024-01-15'
+
+            filtered_df = df[(df['time'] >= start_date) & (df['time'] < end_date)]
+
+            print("\\nFiltered Dataset Shape:", filtered_df.shape)
+            print(filtered_df.head())
+
+            # Now re-run the histogram and scatter plot on 'filtered_df' instead of 'df'
+            # e.g., filtered_df['magnitude'] ...
+            ```
+            Compare the new shape with the original. Are there fewer events? 
+            Does the magnitude distribution look different?
+
+            ---
+            **Map Visualization**:
+            You could **map** these filtered events to see if they cluster in certain regions.
+            A simple example with **folium**:
+            ```python
+            import folium
+
+            # Center map roughly over the world
+            m = folium.Map(location=[0, 0], zoom_start=2)
+
+            for i, row in filtered_df.iterrows():
+                # Make sure your 'latitude' and 'longitude' columns exist!
+                popup_text = f"M: {row['magnitude']}, Depth: {row['depth']} km"
+                folium.CircleMarker(
+                    location=[row['latitude'], row['longitude']],
+                    radius=3,
+                    color='red',
+                    fill=True,
+                    fill_color='red',
+                    popup=popup_text
+                ).add_to(m)
+
+            # Save to HTML
+            m.save('filtered_map.html')
+            print("Map saved as filtered_map.html. Open it locally to view.")
+            ```
+            This way, you can see if quakes in a narrower time window are 
+            concentrated in a specific region or distributed globally.
+            """
+        )
 
     # ───────────────────────────────────────────────────────────────────
     # TAB 3: PLACEHOLDER
