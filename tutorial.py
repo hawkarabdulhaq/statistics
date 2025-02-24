@@ -104,10 +104,10 @@ def main():
         st.markdown("### View or Download `overview.py`")
 
         # Provide a text input or a fixed URL to the raw script
-        # e.g., "https://github.com/hawkarabdulhaq/statistics/blob/main/tutorials/overview.py"
+        # e.g., "https://github.com/hawkarabdulhaq/statistics/blob/main/tutorials/overview.txt"
         default_script_url = st.text_input(
             "Paste the URL to `overview.py`:",
-            value="https://github.com/hawkarabdulhaq/statistics/blob/main/tutorials/overview.py"
+            value="https://github.com/hawkarabdulhaq/statistics/blob/main/tutorials/overview.txt"
         )
 
         if st.button("Fetch and Show Script"):
