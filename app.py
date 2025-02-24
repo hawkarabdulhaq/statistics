@@ -1,6 +1,6 @@
 import streamlit as st
 
-# Import all page modules
+# Import existing and new page modules
 import basic
 import axiom
 import prob
@@ -19,7 +19,7 @@ def home_page():
     """
     Displays the Home page with a banner, a welcome message, and an interactive footer.
     """
-    # Display banner image using use_container_width (new parameter)
+    # Display banner image using use_container_width
     st.image("banner.png", use_container_width=True)
 
     # Home title and welcome message
