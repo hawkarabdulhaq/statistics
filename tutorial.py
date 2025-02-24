@@ -1,10 +1,50 @@
 import streamlit as st
 
+# Replace this string with the actual content of your 'tutorials/overview.py' script.
+# For demonstration, a brief placeholder is used here.
+OVERVIEW_PY_CONTENT = """\"\"\"
+overview.py - Demonstration script
+
+This script reads 'earthquakes.csv' from disk, prints a quick overview,
+and generates a bar chart plus a scatter plot.
+\"\"\"
+
+import pandas as pd
+import matplotlib.pyplot as plt
+import sys
+
+def main():
+    # Example logic
+    data_file = 'earthquakes.csv'
+    print(f'Reading data from {data_file}...')
+    df = pd.read_csv(data_file)
+    print(df.head())
+
+    # Create and save a bar chart (placeholder)
+    plt.figure()
+    df['magnitude'].plot(kind='bar')
+    plt.title('Earthquake Magnitudes')
+    plt.savefig('bar_chart.png')
+    print('Bar chart saved as bar_chart.png')
+
+    # Create and save a scatter plot (placeholder)
+    plt.figure()
+    plt.scatter(df['longitude'], df['latitude'], c=df['magnitude'], cmap='viridis')
+    plt.colorbar(label='Magnitude')
+    plt.title('Earthquake Locations')
+    plt.savefig('scatter_plot.png')
+    print('Scatter plot saved as scatter_plot.png')
+
+if __name__ == '__main__':
+    main()
+"""
+
 def main():
     """
     The Tutorials page contains 6 tabs, one for each tutorial.
-    Tutorial 1 includes detailed instructions, while Tutorials 2-6
-    are placeholders that you can later expand with relevant content.
+    Tutorial 1 includes detailed instructions plus the ability
+    to view or download the 'tutorials/overview.py' file.
+    Tutorials 2-6 are placeholders you can fill in later.
     """
     st.title("Tutorials")
     st.write(
@@ -57,47 +97,52 @@ def main():
                - Once uploaded, you might end up with a path like:  
                  `/content/sample_data/earthquakes.csv`
             
-            4. **Download the Tutorials Script**  
-               - Download the `tutorials/overview.py` script. This script contains Python code 
-                 to read the CSV file, generate summary statistics, create a bar chart, 
-                 and produce a scatter plot.
-               - Upload this script to the Colab environment (same location as your CSV file).
-            
+            4. **Download or View the `overview.py` Script**  
+               - This script contains Python code to read the CSV file, generate summary statistics, 
+                 and produce basic charts.
+               - You can either download it below or copy the code from within this page.
+
             5. **Run the `overview.py` Script**  
                - In a Colab cell, run:
                  ```python
                  !python overview.py
                  ```
-                 or open `overview.py` in Colab and run its cells directly if it's not a standalone script.
+                 or open `overview.py` in Colab if it's not a standalone script.
             
             6. **Check the Output**  
                - The script should read `earthquakes.csv`, generate a **general overview** of the dataset, 
-                 and then display or save a **bar chart** and a **scatter plot**.
-               - You can confirm the results by checking the terminal output (the cell output in Colab).
+                 and produce a **bar chart** plus a **scatter plot**.
+               - Confirm results by checking the Colab cell output.
 
             ---
             **Expected Outcome**:
-            - A quick summary of your earthquake data (count, min/max magnitude, 
-              min/max depth, etc.).
-            - One or more visualizations (bar chart, scatter plot) to help you interpret 
-              the time range or magnitude distribution of the earthquakes.
+            - A quick summary (count, min/max magnitude, min/max depth, etc.) from your CSV.
+            - Visual insights (bar chart, scatter plot) to understand the time range or magnitude distribution.
 
             **Tips**:
-            - Make sure your CSV file path in `overview.py` matches the location 
-              you used to upload `earthquakes.csv`.
-            - If you encounter any errors, double-check the file path and the 
-              environment setup (e.g., Colab's working directory).
+            - Ensure your CSV file path in `overview.py` matches where you uploaded `earthquakes.csv`.
+            - If errors occur, double-check the file path and environment setup.
 
             **Further Exploration**:
-            - Modify the parameters (date range, min magnitude) in the Dataset page 
-              to fetch a different CSV and see how your overview changes.
-            - Customize the `overview.py` script to include additional plots or 
-              statistical analyses.
+            - Fetch a different CSV with changed parameters (dates, min magnitude) and re-run `overview.py`.
+            - Customize the script to add more plots or stats.
 
             ---
             **Need Help?**  
             Contact the instructor or refer to additional tutorials for advanced usage.
             """
+        )
+
+        # Add an expander to show or hide the 'overview.py' code.
+        with st.expander("View the overview.py Script"):
+            st.code(OVERVIEW_PY_CONTENT, language="python")
+
+        # Provide a download button for the script file.
+        st.download_button(
+            label="Download overview.py",
+            data=OVERVIEW_PY_CONTENT,
+            file_name="overview.py",
+            mime="text/plain"
         )
 
     # ──────────────────────────────────────────────────────────────────────────
