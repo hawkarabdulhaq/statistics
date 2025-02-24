@@ -1,37 +1,16 @@
 import streamlit as st
-import requests
 
-def fetch_script_contents(script_url):
+def tutorial_page():
     """
-    Fetches the raw content of a Python script from a given URL.
-    Returns the script text or an empty string if the fetch fails.
+    A page showcasing 6 tabs for tutorials. 
+    The first tab explains how to download 'earthquakes.csv', set up a Colab environment, 
+    and run the 'overview.py' script.
     """
-    try:
-        response = requests.get(script_url)
-        if response.status_code == 200:
-            return response.text
-        else:
-            st.error(f"Failed to fetch script from {script_url} (status code: {response.status_code})")
-            return ""
-    except Exception as e:
-        st.error(f"An error occurred while fetching the script: {e}")
-        return ""
 
-def main():
-    """
-    The Tutorials page contains 6 tabs, one for each tutorial.
-    Tutorial 1 includes detailed instructions, plus a way to view/download the 'overview.py' script.
-    """
     st.title("Tutorials")
-    st.write(
-        """
-        Explore step-by-step guides for different parts of your geological data workflow.
-        Use the tabs below to switch between tutorials.
-        """
-    )
 
-    # Create 6 tabs for 6 tutorials
-    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+    # Create 6 tabs
+    tabs = st.tabs([
         "Tutorial 1: General Overview",
         "Tutorial 2",
         "Tutorial 3",
@@ -40,143 +19,147 @@ def main():
         "Tutorial 6"
     ])
 
-    # ──────────────────────────────────────────────────────────────────────────
-    # Tutorial 1 Content
-    # ──────────────────────────────────────────────────────────────────────────
-    with tab1:
+    # ───────────────────────────────────────────────────────────────────
+    # TAB 1: GENERAL OVERVIEW
+    # ───────────────────────────────────────────────────────────────────
+    with tabs[0]:
         st.subheader("Tutorial 1: General Overview")
 
         st.markdown(
             """
-            **Objective**: Learn how to download an earthquake dataset (`earthquakes.csv`), 
-            upload it into Google Colab, and run an existing Python script to generate 
-            plots and a summary overview.
+            This tutorial guides you through:
+            1. Downloading the **earthquakes.csv** dataset within a specified time range from the **USGS Earthquake API**.
+            2. Opening a **new Google Colab** notebook and mounting your Google Drive.
+            3. Storing the CSV file at a path like `**/content/sample_data/earthquakes.csv**`.
+            4. Downloading and running the **`overview.py`** script in Colab to get a quick summary and plots.
 
             ---
-            ### Steps
+            **Detailed Steps**:
+            
+            1. **Acquire `earthquakes.csv`**  
+               - Use our **`dataset.py`** page (or the USGS API query) to generate your earthquake data.  
+               - Download it locally as `earthquakes.csv`.
+            
+            2. **Open Google Colab**  
+               - Go to [https://colab.research.google.com/](https://colab.research.google.com/)  
+               - Create a **New Notebook**.
 
-            1. **Download the Dataset**  
-               - Navigate to the Dataset page (or Earthquake Data Downloader).
-               - Select the desired start/end dates and minimum magnitude, then click "Fetch Data".
-               - After previewing, click "Download Data as CSV" to save it as `earthquakes.csv`.
-            
-            2. **Open a New Colab Notebook**  
-               - Go to [Google Colab](https://colab.research.google.com/) and create a new notebook.  
-               - Optionally, mount Google Drive if you prefer using `/content/drive/...`.
-            
-            3. **Upload/Move the CSV File**  
-               - For example, place `earthquakes.csv` in `/content/sample_data/` 
-                 or in `/content/drive/MyDrive/`, etc.
-               - Confirm the path in Colab so you know where the CSV resides.
-            
-            4. **Download or Use the `overview.py` Script**  
-               - This script reads `earthquakes.csv`, generates summary stats, 
-                 and produces a bar chart & scatter plot. 
-               - (Scroll down on this page to **view** or **download** the `overview.py` script.)
-            
-            5. **Run the `overview.py` Script**  
-               - In a Colab cell, run:  
-                 ```bash
+            3. **Mount Your Google Drive**  
+               - In Colab, run:
+                 ```python
+                 from google.colab import drive
+                 drive.mount('/content/drive')
+                 ```
+               - Copy your `earthquakes.csv` file into a location such as `/content/sample_data/earthquakes.csv` 
+                 (or another directory you prefer).
+
+            4. **Download `overview.py`**  
+               - Save the script below as `overview.py` (or download it from the provided source).  
+               - Make sure it is in the same Colab environment so you can run it.
+
+            5. **Run `overview.py` in Colab**  
+               - In a code cell, do:
+                 ```python
                  !python overview.py
                  ```
-                 or open `overview.py` in Colab and run its cells (if it's a notebook).
+               - Check the output in the Colab cell output and/or logs.
             
-            6. **Check the Output**  
-               - You should see a general overview of quake data and some basic plots.
+            6. **Analyze Results**  
+               - You'll see a **basic info** about the DataFrame, including shape, head, describe, etc.  
+               - A **histogram** of earthquake magnitudes.  
+               - A **scatter plot** of magnitude vs. depth.
 
             ---
-            **Expected Outcome**:
-            - A quick summary of earthquake data (count, min/max magnitude, min/max depth, etc.).
-            - A bar chart or scatter plot to visualize the data distribution.
-
-            **Tips**:
-            - Make sure the CSV path in `overview.py` matches your Colab environment location.
-            - If you run into errors, check the file path or environment setup.
-
-            **Further Exploration**:
-            - Modify the date range or min magnitude in the Dataset page to get new data.
-            - Extend `overview.py` to create additional plots or deeper analytics.
-
-            ---
+            **Sample `overview.py`**:
             """
         )
 
-        st.markdown("### View or Download `overview.py`")
+        # Display code for overview.py in a code block
+        overview_code = """\
+import pandas as pd
+import matplotlib.pyplot as plt
 
-        # Provide a text input or a fixed URL to the raw script
-        # e.g., "https://github.com/hawkarabdulhaq/statistics/blob/main/tutorials/overview.txt"
-        default_script_url = st.text_input(
-            "Paste the URL to `overview.py`:",
-            value="https://github.com/hawkarabdulhaq/statistics/blob/main/tutorials/overview.txt"
+# Define the path to the CSV file
+file_path = '/content/sample_data/earthquakes.csv'
+
+# Read the CSV file into a DataFrame
+df = pd.read_csv(file_path)
+
+# Convert the 'time' column to datetime format for better handling (optional)
+df['time'] = pd.to_datetime(df['time'])
+
+# Display basic information about the dataset
+print("Dataset Shape:", df.shape)
+print("\\nFirst 5 Rows:")
+print(df.head())
+print("\\nSummary Statistics:")
+print(df.describe())
+
+# Plot a histogram of the earthquake magnitudes
+plt.figure(figsize=(8, 5))
+plt.hist(df['magnitude'], bins=10, color='skyblue', edgecolor='black')
+plt.title("Earthquake Magnitude Distribution")
+plt.xlabel("Magnitude")
+plt.ylabel("Frequency")
+plt.show()
+
+# Plot a scatter plot of Magnitude vs. Depth
+plt.figure(figsize=(8, 5))
+plt.scatter(df['magnitude'], df['depth'], color='green', alpha=0.7)
+plt.title("Magnitude vs. Depth")
+plt.xlabel("Magnitude")
+plt.ylabel("Depth (km)")
+plt.show()
+"""
+        st.code(overview_code, language="python")
+
+        st.markdown(
+            """
+            That’s it for **Tutorial 1**! Once you run `overview.py` in Colab, you should see printed summaries and the two plots as described. 
+            Enjoy exploring your earthquake data!
+            """
         )
 
-        if st.button("Fetch and Show Script"):
-            script_contents = fetch_script_contents(default_script_url)
-            if script_contents:
-                st.code(script_contents, language="python")
-
-                # Provide a download button for the script
-                st.download_button(
-                    label="Download overview.py",
-                    data=script_contents,
-                    file_name="overview.py",
-                    mime="text/x-python"
-                )
-
-    # ──────────────────────────────────────────────────────────────────────────
-    # Tutorial 2 Content (Placeholder)
-    # ──────────────────────────────────────────────────────────────────────────
-    with tab2:
+    # ───────────────────────────────────────────────────────────────────
+    # TAB 2: PLACEHOLDER
+    # ───────────────────────────────────────────────────────────────────
+    with tabs[1]:
         st.subheader("Tutorial 2")
-        st.markdown(
-            """
-            **Coming Soon**: Content for Tutorial 2 will be added here.
-            """
-        )
+        st.write("Content for Tutorial 2 goes here...")
 
-    # ──────────────────────────────────────────────────────────────────────────
-    # Tutorial 3 Content (Placeholder)
-    # ──────────────────────────────────────────────────────────────────────────
-    with tab3:
+    # ───────────────────────────────────────────────────────────────────
+    # TAB 3: PLACEHOLDER
+    # ───────────────────────────────────────────────────────────────────
+    with tabs[2]:
         st.subheader("Tutorial 3")
-        st.markdown(
-            """
-            **Coming Soon**: Content for Tutorial 3 will be added here.
-            """
-        )
+        st.write("Content for Tutorial 3 goes here...")
 
-    # ──────────────────────────────────────────────────────────────────────────
-    # Tutorial 4 Content (Placeholder)
-    # ──────────────────────────────────────────────────────────────────────────
-    with tab4:
+    # ───────────────────────────────────────────────────────────────────
+    # TAB 4: PLACEHOLDER
+    # ───────────────────────────────────────────────────────────────────
+    with tabs[3]:
         st.subheader("Tutorial 4")
-        st.markdown(
-            """
-            **Coming Soon**: Content for Tutorial 4 will be added here.
-            """
-        )
+        st.write("Content for Tutorial 4 goes here...")
 
-    # ──────────────────────────────────────────────────────────────────────────
-    # Tutorial 5 Content (Placeholder)
-    # ──────────────────────────────────────────────────────────────────────────
-    with tab5:
+    # ───────────────────────────────────────────────────────────────────
+    # TAB 5: PLACEHOLDER
+    # ───────────────────────────────────────────────────────────────────
+    with tabs[4]:
         st.subheader("Tutorial 5")
-        st.markdown(
-            """
-            **Coming Soon**: Content for Tutorial 5 will be added here.
-            """
-        )
+        st.write("Content for Tutorial 5 goes here...")
 
-    # ──────────────────────────────────────────────────────────────────────────
-    # Tutorial 6 Content (Placeholder)
-    # ──────────────────────────────────────────────────────────────────────────
-    with tab6:
+    # ───────────────────────────────────────────────────────────────────
+    # TAB 6: PLACEHOLDER
+    # ───────────────────────────────────────────────────────────────────
+    with tabs[5]:
         st.subheader("Tutorial 6")
-        st.markdown(
-            """
-            **Coming Soon**: Content for Tutorial 6 will be added here.
-            """
-        )
+        st.write("Content for Tutorial 6 goes here...")
+
+def main():
+    """
+    Runs the tutorial page directly if this file is executed alone.
+    """
+    tutorial_page()
 
 if __name__ == "__main__":
     main()
