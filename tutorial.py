@@ -1,50 +1,26 @@
 import streamlit as st
+import requests
 
-# Replace this string with the actual content of your 'tutorials/overview.py' script.
-# For demonstration, a brief placeholder is used here.
-OVERVIEW_PY_CONTENT = """\"\"\"
-overview.py - Demonstration script
-
-This script reads 'earthquakes.csv' from disk, prints a quick overview,
-and generates a bar chart plus a scatter plot.
-\"\"\"
-
-import pandas as pd
-import matplotlib.pyplot as plt
-import sys
-
-def main():
-    # Example logic
-    data_file = 'earthquakes.csv'
-    print(f'Reading data from {data_file}...')
-    df = pd.read_csv(data_file)
-    print(df.head())
-
-    # Create and save a bar chart (placeholder)
-    plt.figure()
-    df['magnitude'].plot(kind='bar')
-    plt.title('Earthquake Magnitudes')
-    plt.savefig('bar_chart.png')
-    print('Bar chart saved as bar_chart.png')
-
-    # Create and save a scatter plot (placeholder)
-    plt.figure()
-    plt.scatter(df['longitude'], df['latitude'], c=df['magnitude'], cmap='viridis')
-    plt.colorbar(label='Magnitude')
-    plt.title('Earthquake Locations')
-    plt.savefig('scatter_plot.png')
-    print('Scatter plot saved as scatter_plot.png')
-
-if __name__ == '__main__':
-    main()
-"""
+def fetch_script_contents(script_url):
+    """
+    Fetches the raw content of a Python script from a given URL.
+    Returns the script text or an empty string if the fetch fails.
+    """
+    try:
+        response = requests.get(script_url)
+        if response.status_code == 200:
+            return response.text
+        else:
+            st.error(f"Failed to fetch script from {script_url} (status code: {response.status_code})")
+            return ""
+    except Exception as e:
+        st.error(f"An error occurred while fetching the script: {e}")
+        return ""
 
 def main():
     """
     The Tutorials page contains 6 tabs, one for each tutorial.
-    Tutorial 1 includes detailed instructions plus the ability
-    to view or download the 'tutorials/overview.py' file.
-    Tutorials 2-6 are placeholders you can fill in later.
+    Tutorial 1 includes detailed instructions, plus a way to view/download the 'overview.py' script.
     """
     st.title("Tutorials")
     st.write(
@@ -69,81 +45,83 @@ def main():
     # ──────────────────────────────────────────────────────────────────────────
     with tab1:
         st.subheader("Tutorial 1: General Overview")
+
         st.markdown(
             """
-            **Objective**: Learn how to download an earthquake dataset within a specified time range
-            as `earthquakes.csv`, upload it into a Google Colab environment, and run an existing Python
-            script to generate basic plots and overview statistics.
+            **Objective**: Learn how to download an earthquake dataset (`earthquakes.csv`), 
+            upload it into Google Colab, and run an existing Python script to generate 
+            plots and a summary overview.
 
             ---
             ### Steps
 
             1. **Download the Dataset**  
-               - Navigate to the **Dataset** page (or your Earthquake Data Downloader).
-               - Choose the desired start/end dates and minimum magnitude, then click "Fetch Data".
-               - After previewing the data, use the "Download Data as CSV" button to save the file locally 
-                 as `earthquakes.csv`.
+               - Navigate to the Dataset page (or Earthquake Data Downloader).
+               - Select the desired start/end dates and minimum magnitude, then click "Fetch Data".
+               - After previewing, click "Download Data as CSV" to save it as `earthquakes.csv`.
             
             2. **Open a New Colab Notebook**  
                - Go to [Google Colab](https://colab.research.google.com/) and create a new notebook.  
-               - In the left sidebar, click the **Files** icon, then **Mount Drive** 
-                 (if you want to place the file in your Google Drive).
+               - Optionally, mount Google Drive if you prefer using `/content/drive/...`.
             
             3. **Upload/Move the CSV File**  
-               - Suppose you mount your Google Drive at `/content/drive`.  
-               - Place your `earthquakes.csv` inside a directory such as `/content/drive/MyDrive/`. 
-               - Alternatively, you can upload directly to the Colab environment:
-                 - Click the **Files** icon, then **Upload**, and choose `earthquakes.csv`.
-               - Once uploaded, you might end up with a path like:  
-                 `/content/sample_data/earthquakes.csv`
+               - For example, place `earthquakes.csv` in `/content/sample_data/` 
+                 or in `/content/drive/MyDrive/`, etc.
+               - Confirm the path in Colab so you know where the CSV resides.
             
-            4. **Download or View the `overview.py` Script**  
-               - This script contains Python code to read the CSV file, generate summary statistics, 
-                 and produce basic charts.
-               - You can either download it below or copy the code from within this page.
-
+            4. **Download or Use the `overview.py` Script**  
+               - This script reads `earthquakes.csv`, generates summary stats, 
+                 and produces a bar chart & scatter plot. 
+               - (Scroll down on this page to **view** or **download** the `overview.py` script.)
+            
             5. **Run the `overview.py` Script**  
-               - In a Colab cell, run:
-                 ```python
+               - In a Colab cell, run:  
+                 ```bash
                  !python overview.py
                  ```
-                 or open `overview.py` in Colab if it's not a standalone script.
+                 or open `overview.py` in Colab and run its cells (if it's a notebook).
             
             6. **Check the Output**  
-               - The script should read `earthquakes.csv`, generate a **general overview** of the dataset, 
-                 and produce a **bar chart** plus a **scatter plot**.
-               - Confirm results by checking the Colab cell output.
+               - You should see a general overview of quake data and some basic plots.
 
             ---
             **Expected Outcome**:
-            - A quick summary (count, min/max magnitude, min/max depth, etc.) from your CSV.
-            - Visual insights (bar chart, scatter plot) to understand the time range or magnitude distribution.
+            - A quick summary of earthquake data (count, min/max magnitude, min/max depth, etc.).
+            - A bar chart or scatter plot to visualize the data distribution.
 
             **Tips**:
-            - Ensure your CSV file path in `overview.py` matches where you uploaded `earthquakes.csv`.
-            - If errors occur, double-check the file path and environment setup.
+            - Make sure the CSV path in `overview.py` matches your Colab environment location.
+            - If you run into errors, check the file path or environment setup.
 
             **Further Exploration**:
-            - Fetch a different CSV with changed parameters (dates, min magnitude) and re-run `overview.py`.
-            - Customize the script to add more plots or stats.
+            - Modify the date range or min magnitude in the Dataset page to get new data.
+            - Extend `overview.py` to create additional plots or deeper analytics.
 
             ---
-            **Need Help?**  
-            Contact the instructor or refer to additional tutorials for advanced usage.
             """
         )
 
-        # Add an expander to show or hide the 'overview.py' code.
-        with st.expander("View the overview.py Script"):
-            st.code(OVERVIEW_PY_CONTENT, language="python")
+        st.markdown("### View or Download `overview.py`")
 
-        # Provide a download button for the script file.
-        st.download_button(
-            label="Download overview.py",
-            data=OVERVIEW_PY_CONTENT,
-            file_name="overview.py",
-            mime="text/plain"
+        # Provide a text input or a fixed URL to the raw script
+        # e.g., "https://raw.githubusercontent.com/username/repository/main/tutorials/overview.py"
+        default_script_url = st.text_input(
+            "Paste the URL to `overview.py`:",
+            value="https://raw.githubusercontent.com/username/repository/main/tutorials/overview.py"
         )
+
+        if st.button("Fetch and Show Script"):
+            script_contents = fetch_script_contents(default_script_url)
+            if script_contents:
+                st.code(script_contents, language="python")
+
+                # Provide a download button for the script
+                st.download_button(
+                    label="Download overview.py",
+                    data=script_contents,
+                    file_name="overview.py",
+                    mime="text/x-python"
+                )
 
     # ──────────────────────────────────────────────────────────────────────────
     # Tutorial 2 Content (Placeholder)
@@ -153,7 +131,6 @@ def main():
         st.markdown(
             """
             **Coming Soon**: Content for Tutorial 2 will be added here.
-            Feel free to insert instructions for your second tutorial.
             """
         )
 
