@@ -89,7 +89,7 @@ def main():
         st.session_state["current_page"] = "Probability (Fossil A & B)"
     if st.sidebar.button("Dataset"):
         st.session_state["current_page"] = "Dataset"
-    if st.sidebar.button("tutorial1"):
+    if st.sidebar.button("tutorial 1"):
         st.session_state["current_page"] = "tutorial1s"
 
     # Route to the selected page
