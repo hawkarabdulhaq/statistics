@@ -4,13 +4,14 @@ import streamlit as st
 import basic
 import axiom
 import prob
+import dataset  # New page for earthquake dataset
 
 # ──────────────────────────────────────────────────────────────────────────
 # 1. SET PAGE CONFIG (MUST BE FIRST STREAMLIT COMMAND IN THIS SCRIPT)
 # ──────────────────────────────────────────────────────────────────────────
 st.set_page_config(
     layout="wide",
-    page_title="Multi-Page App: Home | Basic Stats | Probability Axioms | Probability",
+    page_title="Multi-Page App: Home | Basic Stats | Probability Axioms | Probability | Dataset",
     initial_sidebar_state="expanded"
 )
 
@@ -42,6 +43,7 @@ def home_page():
         - **Basic Statistics**: Generate a synthetic paleoenvironmental dataset, explore basic statistics, visualize distributions, and analyze data.
         - **Probability Axioms**: Dive deeper into Bayes’ theorem, conditional probabilities, and related real-world examples.
         - **Probability (Fossil A & B)**: Interactively explore how fossil presence/absence data is used to calculate co-occurrence probabilities.
+        - **Dataset**: Fetch earthquake event data from the USGS API and download the dataset as CSV.
         """
     )
     
@@ -62,11 +64,12 @@ def home_page():
 def main():
     """
     Main controller for page navigation.
-    There are four pages:
+    There are five pages:
       - Home
       - Basic Statistics (from basic.py)
       - Probability Axioms (from axiom.py)
       - Probability (Fossil A & B) (from prob.py)
+      - Dataset (from dataset.py)
     """
     # Initialize session state for tracking current page
     if "current_page" not in st.session_state:
@@ -81,6 +84,8 @@ def main():
         st.session_state["current_page"] = "Probability Axioms"
     if st.sidebar.button("Probability (Fossil A & B)"):
         st.session_state["current_page"] = "Probability (Fossil A & B)"
+    if st.sidebar.button("Dataset"):
+        st.session_state["current_page"] = "Dataset"
 
     # Route to the selected page
     current_page = st.session_state["current_page"]
@@ -93,6 +98,8 @@ def main():
         axiom.main()
     elif current_page == "Probability (Fossil A & B)":
         prob.main()
+    elif current_page == "Dataset":
+        dataset.main()
 
 if __name__ == "__main__":
     main()
