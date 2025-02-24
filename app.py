@@ -5,6 +5,7 @@ import basic
 import axiom
 import prob
 import dataset  # New page for earthquake dataset
+import tutorial
 
 # ──────────────────────────────────────────────────────────────────────────
 # 1. SET PAGE CONFIG (MUST BE FIRST STREAMLIT COMMAND IN THIS SCRIPT)
@@ -86,6 +87,9 @@ def main():
         st.session_state["current_page"] = "Probability (Fossil A & B)"
     if st.sidebar.button("Dataset"):
         st.session_state["current_page"] = "Dataset"
+
+    if current_page == "Tutorials":
+    tutorial.main()
 
     # Route to the selected page
     current_page = st.session_state["current_page"]
