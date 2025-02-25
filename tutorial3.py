@@ -41,7 +41,7 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
 # Path to your single-band NDVI TIF
-NDVI_TIF = 'https://github.com/hawkarabdulhaq/statistics/blob/main/input/S2_NDVI2.tif'
+NDVI_TIF = '/content/sample_data/S2_NDVI.tif'
 
 def main():
     # 1) Read NDVI GeoTIFF
