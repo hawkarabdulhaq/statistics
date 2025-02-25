@@ -14,41 +14,73 @@ def tutorial2_page():
 
     st.markdown(
         """
-        This tutorial shows you how to:
-        
-        - **Download** an earthquake dataset (`earthquakes.csv`).  
-        - **Compute** the **mean**, **median**, and **mode** of earthquake magnitudes.  
-        - **Visualize** magnitudes in a histogram and identify any common magnitude values (discrete or near-discrete data).
+        In this tutorial, you'll **actively explore** how **mean**, **median**, 
+        and **mode** vary for different subsets of earthquake data. 
+        You’ll practice downloading multiple datasets, analyzing them in 
+        **Google Colab**, and **comparing** your results.
 
         ---
-        ### Getting Started in Google Colab
-        
-        1. **Obtain `earthquakes.csv`**  
-           - Use your **dataset page** (or the USGS API) to generate and download a CSV.  
-           - Ensure the file has **at least**: `magnitude` (plus optional `time`, `latitude`, `longitude`, `depth`).
+        ## Objectives:
+        1. **Generate multiple CSV files** from the dataset page (or the USGS API) by varying the **start date**, **end date**, or **minimum magnitude**.
+        2. **Compute** mean, median, and mode for each dataset using a Python script in Colab.
+        3. **Visualize** magnitude distributions (histograms, bar charts).
+        4. **Reflect** on how outliers, time periods, or magnitude thresholds affect the central tendencies.
 
-        2. **Open a Colab Notebook**  
-           - Go to [Google Colab](https://colab.research.google.com/).  
-           - Create a new notebook and run:
-             ```python
-             from google.colab import drive
-             drive.mount('/content/drive')
-             ```
-           - Place `earthquakes.csv` into `/content/sample_data/` (or your preferred folder).
+        By the end, you should have a clear understanding of **which measures** (mean, median, mode) 
+        are more stable or more influenced by extremes in your quake data.
 
-        3. **Download & Run `stats_overview.py`**  
-           - Copy the code below into a file named **`stats_overview.py`**.  
-           - In Colab, run:
-             ```python
-             !python stats_overview.py
-             ```
-           - The script prints **mean, median, mode** and shows two plots:  
-             - A **histogram** of magnitudes.  
-             - A **bar chart** showing discrete magnitude counts (useful for checking if a mode stands out).
+        ---
+        ### Step 1: Collect Multiple Datasets
+        - Go to your dataset page (or USGS API) 
+        - Pick **3 different parameter sets** (e.g., different time windows or different minimum magnitudes).
+        - Download each as a **unique** `earthquakes_1.csv`, `earthquakes_2.csv`, `earthquakes_3.csv`.
+
+        **Example**:
+        - **Dataset A**: Start = 2024-01-01, End = 2024-01-15, Min Magnitude = 4  
+        - **Dataset B**: Start = 2024-01-15, End = 2024-02-01, Min Magnitude = 4  
+        - **Dataset C**: Start = 2024-01-01, End = 2024-02-01, Min Magnitude = 5
+
+        (Feel free to choose your own parameters.)
+
+        ---
+        ### Step 2: Prepare Google Colab
+        - Go to [Google Colab](https://colab.research.google.com/) 
+        - Create a **new notebook**.
+        - Mount drive:
+          ```python
+          from google.colab import drive
+          drive.mount('/content/drive')
+          ```
+        - Upload each CSV to `/content/sample_data/` or any folder you want.
+
+        ---
+        ### Step 3: Run the `stats_overview.py` Script
+        - Copy the script below into a file named **`stats_overview.py`**.
+        - In Colab, do:
+          ```python
+          !python stats_overview.py
+          ```
+        - Modify the `csv_path` variable if your files are named differently (e.g., `earthquakes_2.csv`).
+
+        **Your Task**:
+        1. For **each** dataset, run the script (adjust the code each time to point to the correct file).  
+        2. **Record** mean, median, and mode of quake magnitudes in a small table or notes.  
+        3. Observe the **histogram** and **bar chart** for each dataset. Are there outliers? Is there a clear mode?
+
+        ---
+        ### Step 4: Reflect & Compare (Spend ~20 minutes)
+        - How does **time window** or **minimum magnitude** influence the mean vs. median?
+        - Is the **mode** stable, or does it change drastically with dataset parameters?
+        - Did you notice any skew in the distribution or an unusual number of outliers?
+
+        Write a short paragraph (5–10 sentences) summarizing:
+        - Which measure (mean, median, mode) changed the most across your datasets?
+        - Did the histogram shapes differ significantly? Why might that be?
 
         ---
         ### `stats_overview.py` Script
-        Below is a minimal script focusing on central tendencies and simple plots:
+        This script calculates mean, median, mode for `magnitude` 
+        and shows a histogram + a bar chart for potential discrete modes.
         """
     )
 
@@ -57,7 +89,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from statistics import mode, StatisticsError
 
-# Path to your CSV
+# Path to your CSV file (adjust as needed for each dataset)
 csv_path = '/content/sample_data/earthquakes.csv'
 
 def main():
@@ -71,11 +103,11 @@ def main():
     print("\\nFirst 5 Rows:")
     print(df.head())
 
-    # 2. Basic stats
-    print("\\nSummary Statistics (Pandas describe):")
+    # 2. Summary stats from pandas
+    print("\\nSummary Statistics (pandas describe):")
     print(df.describe())
 
-    # 3. Compute mean, median, mode for 'magnitude'
+    # 3. Compute mean, median, mode manually for 'magnitude'
     magnitudes = df['magnitude'].dropna()
     mean_val = magnitudes.mean()
     median_val = magnitudes.median()
@@ -83,7 +115,7 @@ def main():
     try:
         mode_val = mode(magnitudes)
     except StatisticsError:
-        # If there's no unique mode or multiple equally common values
+        # Occurs if there's no single unique mode
         mode_val = "Multiple or No Unique Mode"
 
     print(f"\\nMean Magnitude: {mean_val:.3f}")
@@ -100,14 +132,14 @@ def main():
     plt.tight_layout()
     plt.show()
 
-    # 5. Optional: If magnitude data is near-integer, a bar chart can illustrate discrete counts
-    # Round to nearest 0.1 or integer for demonstration
-    rounded_mags = magnitudes.round()
-    counts = rounded_mags.value_counts().sort_index()
+    # 5. Optional bar chart for discrete magnitude approach
+    # For demonstration, let's round magnitudes to nearest 0.5
+    mag_rounded = magnitudes.round(1)
+    counts = mag_rounded.value_counts().sort_index()
 
     plt.figure(figsize=(7, 4))
     plt.bar(counts.index.astype(str), counts.values, color='orange', edgecolor='black')
-    plt.title("Rounded Magnitude Counts (Approx. Mode)")
+    plt.title("Rounded Magnitude Counts")
     plt.xlabel("Rounded Magnitude")
     plt.ylabel("Count")
     plt.grid(True, alpha=0.3)
@@ -124,21 +156,19 @@ if __name__ == '__main__':
     st.markdown(
         """
         ---
-        **Interpreting Mean, Median, & Mode**:
-        
-        - **Mean**: The average value. Quakes with very high or low magnitude can skew this measure.  
-        - **Median**: The middle value when sorted. More robust if outliers exist.  
-        - **Mode**: The most frequently occurring value. Useful for discrete or near-discrete data.  
+        ## Wrap-Up
 
-        These statistics provide **central tendency** insights.  
-        The histogram and bar chart help visualize the distribution of magnitudes, revealing:
-        
-        - **Skewness** (long tails?).  
-        - **Common magnitude bins** (spikes in the bar chart?).  
-        - **Outliers** or unusual patterns.
+        **Estimated Time**: ~40 minutes  
+        - **~10 min** generating and downloading multiple CSV files.  
+        - **~10 min** running each dataset in Colab, capturing mean, median, mode, and the plots.  
+        - **~20 min** reflecting and **writing** a short comparison of how your data changed across the different parameter sets.
 
-        **Experiment** by selecting different start/end times or minimum magnitudes in your dataset page, 
-        then re-run this script to see how central tendencies change!
+        By following these steps, you'll gain **hands-on** experience in:
+        - Adjusting dataset parameters (time range, min. magnitude).
+        - Understanding **central tendencies** in real-world geological data.
+        - Recognizing how **mean**, **median**, and **mode** respond to outliers or distribution skew.
+
+        **Enjoy** your exploration!
         """
     )
 
