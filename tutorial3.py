@@ -17,7 +17,7 @@ def tutorial3_page():
 
     st.title("Tutorial 3: NDVI Analysis & Filtering")
 
-    tab1, tab2 = st.tabs(["Tab 1: NDVI Analysis Script", "Tab 2: Filtering Script"])
+    tab1, tab2 = st.tabs(["NDVI Analysis Script", "Filtering Script"])
 
     # ────────────────────────────────────────────────────────────────────
     # TAB 1: NDVI ANALYSIS SCRIPT
