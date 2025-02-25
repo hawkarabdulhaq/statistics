@@ -2,10 +2,13 @@ import streamlit as st
 
 def tutorial2_page():
     """
-    A single-page tutorial for mean, median, and mode (Tutorial 2).
-    Explains how to run '3d_extrusion.py' in Colab to visualize earthquake data in 3D
-    while also computing mean, median, and mode of the magnitudes.
+    Tutorial 2: Mean, Median, and Mode with 3D Extrusion Visualization
     """
+    # Display the banner image from GitHub
+    st.image(
+        "https://raw.githubusercontent.com/hawkarabdulhaq/statistics/main/input/02.jpg", 
+        use_container_width=True
+    )
 
     st.title("Tutorial 2: Mean, Median, and Mode with 3D Extrusion Visualization")
 
@@ -13,48 +16,40 @@ def tutorial2_page():
         """
         In this tutorial, you'll learn how to:
         
-        1. **Compute basic statistics** (mean, median, mode) for earthquake magnitudes.  
-        2. **Visualize** the data in a **3D extruded** view using earthquake **magnitude** and **depth**.  
-        3. Run the script (named **`3d_extrusion.py`**) in **Google Colab** after setting up your data.
+        1. **Compute basic statistics** (mean, median, and mode) for earthquake magnitudes.  
+        2. **Visualize** the data in a **3D extruded** view using earthquake **magnitude** (base area) and **depth** (height).  
+        3. Execute the script (named **`3d_extrusion.py`**) in **Google Colab** after placing your dataset.
 
         ---
-        **Steps to Follow**:
+        **Steps**:
         
-        1. **Obtain `earthquakes.csv`**  
-           - Use the previous **`dataset.py`** page or USGS API to download the CSV.  
-           - Make sure it has columns: `latitude`, `longitude`, `magnitude`, `depth`, and optionally `time`.
+        **1. Acquire `earthquakes.csv`**  
+        - From the **dataset** page (or via the USGS API directly).  
+        - Make sure the CSV has `latitude`, `longitude`, `magnitude`, and `depth`. Optionally `time`.
 
-        2. **Open Google Colab & Mount Drive**  
-           - Go to [Google Colab](https://colab.research.google.com/).  
-           - In a new notebook, run:
-             ```python
-             from google.colab import drive
-             drive.mount('/content/drive')
-             ```
-           - Upload `earthquakes.csv` to `/content/sample_data/` or a folder you prefer.
+        **2. Open Google Colab**  
+        - Navigate to [Google Colab](https://colab.research.google.com/).  
+        - Create a new notebook and run:
+          ```python
+          from google.colab import drive
+          drive.mount('/content/drive')
+          ```
+        - Place `earthquakes.csv` into `/content/sample_data/` or your desired folder.
 
-        3. **Get a World Map Image**  
-           - This script references `world_map.png` for a background.  
-           - If you don't have it, the script will print a warning and skip rendering the base map.  
-           - (Optional) Place `world_map.png` in the same Colab directory.
+        **3. World Map (Optional)**  
+        - The script references a `world_map.png`.  
+        - If you don't provide it, a warning appears, but the 3D quake extrusions still render.
 
-        4. **Download & Run `3d_extrusion.py`**  
-           - Copy the script below into a file named `3d_extrusion.py`.  
-           - In a Colab cell, do:
-             ```python
-             !python 3d_extrusion.py
-             ```
-           - This script prints **mean, median, mode** for magnitude and **extrudes** each quake event in 3D.
+        **4. Download & Run `3d_extrusion.py`**  
+        - Copy the script below into a file named `3d_extrusion.py`.  
+        - In Colab, run:
+          ```python
+          !python 3d_extrusion.py
+          ```
+        - This prints **mean, median, mode** of quake magnitudes & extrudes each event in 3D.
 
         ---
-        ### The `3d_extrusion.py` Script
-        Below is the complete script, which:
-        - Reads `earthquakes.csv`
-        - Calculates **mean**, **median**, and **mode** of quake magnitudes
-        - Creates a **3D** view where each quake is an extruded square:
-          - Base area ~ **magnitude**  
-          - Height ~ **depth**  
-          - Color ~ **magnitude** scale
+        ### `3d_extrusion.py` Script
         """
     )
 
@@ -127,8 +122,6 @@ def main():
     magnitudes = df['magnitude'].dropna()
     mean_mag = magnitudes.mean()
     median_mag = magnitudes.median()
-    # Python's built-in 'statistics.mode' can raise an error if there's more than one mode
-    # so we'll handle that carefully.
     try:
         mode_mag = mode(magnitudes)
     except:
@@ -147,28 +140,22 @@ def main():
     ax = fig.add_subplot(projection='3d')
     ax.set_title("3D Extruded Earthquake Map\\n(Base area ~ magnitude, height ~ depth, color ~ magnitude)")
 
-    # 5. Place the world map at z=-1
+    # 5. Place the world map at z=-1 if available
     try:
         map_img = plt.imread(world_map_path)
         ny, nx, _ = map_img.shape
-
-        # Create a mesh for X from -180..180, Y from -90..90
         lon_lin = np.linspace(-180, 180, nx)
         lat_lin = np.linspace(-90, 90, ny)
         X, Y = np.meshgrid(lon_lin, lat_lin)
         Z = np.full_like(X, -1.0)
 
-        # Flip vertical axis of the image if needed
         map_img_float = map_img[::-1,:,:].astype(float) / 255.0
-
-        # Plot the map as a surface
         ax.plot_surface(
             X, Y, Z,
             rstride=1, cstride=1,
             facecolors=map_img_float,
             shade=False
         )
-
     except FileNotFoundError:
         print("WARNING: 'world_map.png' not found. No base map will be shown.")
 
@@ -179,7 +166,6 @@ def main():
     mag_max = df['magnitude'].max()
     norm = Normalize(vmin=mag_min, vmax=mag_max)
 
-    # 7. Build extruded squares
     from mpl_toolkits.mplot3d.art3d import Poly3DCollection
     all_faces = []
     face_colors = []
@@ -207,22 +193,16 @@ def main():
     )
     ax.add_collection3d(poly_collection)
 
-    # 8. Axis bounds
-    lon_min, lon_max = df['longitude'].min(), df['longitude'].max()
-    lat_min, lat_max = df['latitude'].min(), df['latitude'].max()
+    # 7. Axis bounds
     depth_max = df['depth'].max()
-
-    # Show entire globe or clamp to data. Here, entire globe:
     ax.set_xlim(-180, 180)
     ax.set_ylim(-90, 90)
-    # z-limits
     ax.set_zlim(-1.5, depth_max * scale_height * 1.5)
-
     ax.set_xlabel("Longitude")
     ax.set_ylabel("Latitude")
     ax.set_zlabel("Depth Extrusion")
 
-    # 9. Colorbar for magnitude
+    # 8. Colorbar for magnitude
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
     sm.set_array([])
     cb = plt.colorbar(sm, ax=ax, pad=0.1, shrink=0.6)
@@ -239,20 +219,22 @@ if __name__ == "__main__":
     st.markdown(
         """
         ---
-        **How to interpret the results**:
-        - **Mean magnitude** tells you the average quake size.
-        - **Median magnitude** is the midpoint—half of quakes are smaller, half are larger.
-        - **Mode magnitude** is the most frequently occurring magnitude (if a clear single mode exists).
-        - The **3D view** extrudes each event based on **magnitude** and **depth**, 
-          giving you a tangible sense of where bigger, deeper quakes occur.
-
-        When you run `3d_extrusion.py`, you'll see these statistics printed, 
-        followed by a 3D figure. Click on the figure to **rotate** and **explore** 
-        quake events in 3D space.
+        **Interpreting the Results**:
         
-        **Enjoy exploring how mean, median, and mode can provide quick insights** 
-        into your dataset’s central tendencies, 
-        while the 3D extrusions offer a more **visual** perspective of the data.
+        - **Mean**: The average quake magnitude.  
+        - **Median**: The "middle" quake magnitude when sorted—half are smaller, half are bigger.  
+        - **Mode**: The most frequently appearing magnitude (if there's a single dominant value).  
+        
+        In the **3D** view:
+        - **Base area** of each square ~ `sqrt(magnitude)`.  
+        - **Height** ~ `depth`.  
+        - **Color** ~ `magnitude` (colormap from blue=low to red=high).
+        
+        This approach blends **basic statistics** with **visual geospatial context**, 
+        letting you see patterns in magnitude and depth simultaneously.
+        
+        **Enjoy exploring your data** and seeing how mean, median, and mode 
+        can highlight different aspects of quake distributions!
         """
     )
 
