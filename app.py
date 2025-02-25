@@ -5,14 +5,15 @@ import basic
 import axiom
 import prob
 import dataset
-import tutorial1  # <-- New tutorial1s page
+import tutorial1
+import tutorial2  # <-- New tutorial2 page
 
 # ──────────────────────────────────────────────────────────────────────────
 # 1. SET PAGE CONFIG (MUST BE FIRST STREAMLIT COMMAND IN THIS SCRIPT)
 # ──────────────────────────────────────────────────────────────────────────
 st.set_page_config(
     layout="wide",
-    page_title="Multi-Page App: Home | Basic Stats | Probability Axioms | Probability | Dataset | tutorial1s",
+    page_title="Multi-Page App: Home | Basic Stats | Probability Axioms | Probability | Dataset | Tutorials",
     initial_sidebar_state="expanded"
 )
 
@@ -45,7 +46,8 @@ def home_page():
         - **Probability Axioms**: Dive deeper into Bayes’ theorem, conditional probabilities, and related real-world examples.
         - **Probability (Fossil A & B)**: Interactively explore how fossil presence/absence data is used to calculate co-occurrence probabilities.
         - **Dataset**: Fetch earthquake event data from the USGS API and download the dataset as CSV.
-        - **tutorial1s**: Step-by-step guides showing how to work with data, run analyses, and interpret results.
+        - **Tutorial 1**: Step-by-step guide for downloading a dataset and running `overview.py`.
+        - **Tutorial 2**: Step-by-step guide for mean, median, mode, and a 3D extruded quake visualization.
         """
     )
     
@@ -66,13 +68,14 @@ def home_page():
 def main():
     """
     Main controller for page navigation.
-    There are six pages:
+    There are seven pages:
       - Home
       - Basic Statistics (from basic.py)
       - Probability Axioms (from axiom.py)
       - Probability (Fossil A & B) (from prob.py)
       - Dataset (from dataset.py)
-      - tutorial1s (from tutorial1.py)
+      - Tutorial 1 (from tutorial1.py)
+      - Tutorial 2 (from tutorial2.py)
     """
     # Initialize session state for tracking current page
     if "current_page" not in st.session_state:
@@ -90,7 +93,9 @@ def main():
     if st.sidebar.button("Dataset"):
         st.session_state["current_page"] = "Dataset"
     if st.sidebar.button("Tutorial 1"):
-        st.session_state["current_page"] = "tutorial1s"
+        st.session_state["current_page"] = "Tutorial 1"
+    if st.sidebar.button("Tutorial 2"):
+        st.session_state["current_page"] = "Tutorial 2"
 
     # Route to the selected page
     current_page = st.session_state["current_page"]
@@ -105,8 +110,10 @@ def main():
         prob.main()
     elif current_page == "Dataset":
         dataset.main()
-    elif current_page == "tutorial1s":
+    elif current_page == "Tutorial 1":
         tutorial1.main()
+    elif current_page == "Tutorial 2":
+        tutorial2.main()
 
 if __name__ == "__main__":
     main()
