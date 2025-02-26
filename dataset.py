@@ -3,17 +3,16 @@ import pandas as pd
 import requests
 from datetime import datetime
 
-# Use cache_data to prevent re-fetching data unnecessarily.
 @st.cache_data(show_spinner=True)
 def fetch_earthquake_data(starttime, endtime, minmagnitude):
     """
     Fetches earthquake data from the USGS API based on provided parameters.
-
+    
     Parameters:
     - starttime (str): Start date in 'YYYY-MM-DD' format.
     - endtime (str): End date in 'YYYY-MM-DD' format.
     - minmagnitude (float): Minimum magnitude for events.
-
+    
     Returns:
     - dict: The GeoJSON response as a Python dictionary.
     """
@@ -34,13 +33,13 @@ def fetch_earthquake_data(starttime, endtime, minmagnitude):
 def parse_earthquake_data(data):
     """
     Parses the GeoJSON earthquake data and converts it into a pandas DataFrame.
-
+    
     Extracted fields include:
       - time: Event time (converted from epoch to human-readable format).
       - magnitude: The earthquake magnitude.
       - place: The location description.
       - longitude, latitude, depth: Coordinates from the event's geometry.
-
+    
     Returns:
     - pd.DataFrame: DataFrame containing the extracted earthquake data.
     """
@@ -69,73 +68,58 @@ def parse_earthquake_data(data):
     
     return pd.DataFrame(records)
 
-
 def main():
-    st.title("Data Downloader and Additional Resources")
+    st.title("Data Downloads and Resources")
 
-    # Section 1: Earthquake Data Downloader
-    st.subheader("1) Earthquake Data via USGS API")
-    st.write("Use the sidebar to query earthquake events from the USGS and download as CSV.")
+    # Create three tabs
+    tab1, tab2, tab3 = st.tabs(["Earthquake Data", "NDVI File", "Coral Isotope Data"])
 
-    st.sidebar.header("Earthquake Query Parameters")
-    start_date = st.sidebar.date_input("Start Date", value=pd.to_datetime("2024-01-01"))
-    end_date = st.sidebar.date_input("End Date", value=pd.to_datetime("2024-02-01"))
-    min_magnitude = st.sidebar.number_input("Minimum Magnitude", min_value=0.0, max_value=10.0, value=5.0, step=0.1)
-    
-    # Button to trigger data fetching.
-    if st.sidebar.button("Fetch Earthquake Data"):
-        # Format dates as strings in 'YYYY-MM-DD'
-        start_str = start_date.strftime("%Y-%m-%d")
-        end_str = end_date.strftime("%Y-%m-%d")
-        
-        with st.spinner("Fetching earthquake data..."):
-            data = fetch_earthquake_data(start_str, end_str, min_magnitude)
-            
-            if data:
-                df = parse_earthquake_data(data)
-                if df.empty:
-                    st.warning("No earthquake data found for these parameters.")
+    # ─────────────────────────────────────────────────────────────────
+    # TAB 1: EARTHQUAKE DATA
+    # ─────────────────────────────────────────────────────────────────
+    with tab1:
+        st.subheader("1) Earthquake Data via USGS API")
+        st.write("Use the parameter inputs below to fetch quake data from USGS, then download as CSV.")
+
+        start_date = st.date_input("Start Date", value=pd.to_datetime("2024-01-01"))
+        end_date = st.date_input("End Date", value=pd.to_datetime("2024-02-01"))
+        min_magnitude = st.number_input("Minimum Magnitude", min_value=0.0, max_value=10.0, value=5.0, step=0.1)
+
+        if st.button("Fetch Earthquake Data"):
+            start_str = start_date.strftime("%Y-%m-%d")
+            end_str = end_date.strftime("%Y-%m-%d")
+
+            with st.spinner("Fetching earthquake data..."):
+                data = fetch_earthquake_data(start_str, end_str, min_magnitude)
+                if data:
+                    df = parse_earthquake_data(data)
+                    if df.empty:
+                        st.warning("No earthquake data found for these parameters.")
+                    else:
+                        st.success(f"Fetched {len(df)} earthquake events.")
+                        st.subheader("Data Preview (First 10 Records)")
+                        st.dataframe(df.head(10))
+                        
+                        csv_data = df.to_csv(index=False).encode("utf-8")
+                        st.download_button(
+                            label="Download Data as CSV",
+                            data=csv_data,
+                            file_name="earthquakes.csv",
+                            mime="text/csv"
+                        )
                 else:
-                    st.success(f"Fetched {len(df)} earthquake events.")
-                    st.subheader("Data Preview (First 10 Records)")
-                    st.dataframe(df.head(10))
-                    
-                    # Create CSV for download.
-                    csv_data = df.to_csv(index=False).encode("utf-8")
-                    st.download_button(
-                        label="Download Data as CSV",
-                        data=csv_data,
-                        file_name="earthquakes.csv",
-                        mime="text/csv"
-                    )
-            else:
-                st.error("Failed to fetch data. Please try again with different parameters.")
+                    st.error("Failed to fetch data. Please try again with different parameters.")
 
-    # Section 2: Additional Tutorial Files
-    st.markdown("---")
-    st.subheader("2) Additional Files for Tutorials")
-    st.write(
-        """
-        Below are direct download links for two files needed in other tutorials:
-        
-        - **S2_NDVI2.tif**: A single-band NDVI GeoTIFF for NDVI-related tasks.
-        - **abraham_reef.txt**: The Abraham Reef Biannual Coral Isotope Data.
-        
-        Each button fetches the file from GitHub and allows you to download it locally.
-        """
-    )
+    # ─────────────────────────────────────────────────────────────────
+    # TAB 2: NDVI FILE
+    # ─────────────────────────────────────────────────────────────────
+    with tab2:
+        st.subheader("2) S2_NDVI2.tif Download")
+        st.write("This single-band NDVI GeoTIFF can be used in NDVI-related tutorials.")
 
-    # Raw GitHub URLs (direct file content)
-    ndvi_url = "https://raw.githubusercontent.com/hawkarabdulhaq/statistics/main/input/S2_NDVI2.tif"
-    reef_url = "https://raw.githubusercontent.com/hawkarabdulhaq/statistics/main/input/abraham_reef.txt"
-
-    # We can fetch these files in memory then provide a download button
-    col1, col2 = st.columns(2)
-
-    with col1:
-        st.write("**S2_NDVI2.tif**")
-        if st.button("Download NDVI File"):
-            with st.spinner("Fetching S2_NDVI2.tif..."):
+        ndvi_url = "https://raw.githubusercontent.com/hawkarabdulhaq/statistics/main/input/S2_NDVI2.tif"
+        if st.button("Download NDVI TIF"):
+            with st.spinner("Fetching S2_NDVI2.tif from GitHub..."):
                 ndvi_response = requests.get(ndvi_url)
                 if ndvi_response.status_code == 200:
                     ndvi_file = ndvi_response.content
@@ -147,11 +131,19 @@ def main():
                     )
                 else:
                     st.error("Failed to fetch S2_NDVI2.tif from GitHub. Please try again later.")
-    
-    with col2:
-        st.write("**abraham_reef.txt**")
-        if st.button("Download Coral Isotope File"):
-            with st.spinner("Fetching abraham_reef.txt..."):
+
+        st.info("Use this `.tif` file in your NDVI tutorials (like Tutorial 3).")
+
+    # ─────────────────────────────────────────────────────────────────
+    # TAB 3: CORAL ISOTOPE DATA
+    # ─────────────────────────────────────────────────────────────────
+    with tab3:
+        st.subheader("3) Abraham Reef Coral Isotope Data")
+        st.write("Download the `abraham_reef.txt` file for the coral isotope tutorials (e.g., Tutorial 4).")
+
+        reef_url = "https://raw.githubusercontent.com/hawkarabdulhaq/statistics/main/input/abraham_reef.txt"
+        if st.button("Download abraham_reef.txt"):
+            with st.spinner("Fetching abraham_reef.txt from GitHub..."):
                 reef_response = requests.get(reef_url)
                 if reef_response.status_code == 200:
                     reef_file = reef_response.content
@@ -163,6 +155,18 @@ def main():
                     )
                 else:
                     st.error("Failed to fetch abraham_reef.txt from GitHub. Please try again later.")
+
+        st.markdown(
+            """
+            **Data Description**:  
+            Abraham Reef Biannual Coral Isotope data, with columns:
+            - `age` (year AD),
+            - `d18O` (permil VPDB),
+            - `d13C` (permil VPDB).  
+            
+            Useful for paleoclimate analysis, e.g., **Tutorial 4** (group task).
+            """
+        )
 
 
 if __name__ == "__main__":
