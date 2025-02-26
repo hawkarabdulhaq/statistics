@@ -147,7 +147,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 # Path to the Abraham Reef coral data file
-DATA_FILE = '/content/abraham_reef.txt'
+DATA_FILE = '/content/sample_data/abraham_reef.txt'
 
 # Filter range
 START_YEAR = 1700
