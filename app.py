@@ -9,6 +9,7 @@ import tutorial1
 import tutorial2
 import tutorial3
 import tutorial4
+import homework  # <-- New Homework page
 
 # ──────────────────────────────────────────────────────────────────────────
 # 1. SET PAGE CONFIG (MUST BE FIRST STREAMLIT COMMAND IN THIS SCRIPT)
@@ -47,11 +48,12 @@ def home_page():
         - **Basic Statistics**: Generate a synthetic paleoenvironmental dataset, explore basic statistics, visualize distributions, and analyze data.
         - **Probability Axioms**: Dive deeper into Bayes’ theorem, conditional probabilities, and related real-world examples.
         - **Probability (Fossil A & B)**: Interactively explore how fossil presence/absence data is used to calculate co-occurrence probabilities.
-        - **Dataset**: Fetch earthquake event data from the USGS API and download the dataset as CSV.
+        - **Dataset**: Fetch earthquake event data from the USGS API and download the dataset as CSV, plus extra NDVI & coral files.
         - **Tutorial 1**: Step-by-step guide for downloading a dataset and running `overview.py`.
         - **Tutorial 2**: Exploring mean, median, and mode with multiple datasets, histograms, and bar charts.
         - **Tutorial 3**: Filtering spectral bands to identify water, forest, or crops using NDVI/MNDWI thresholds.
         - **Tutorial 4**: Abraham Reef Biannual Coral Isotope Data (Group Task) — advanced reading, filtering, correlation, and interpretation.
+        - **Homework**: Instructions for one-page results for each tutorial, to be submitted in Coospace.
         """
     )
     
@@ -83,6 +85,7 @@ def main():
       - Tutorial 2
       - Tutorial 3
       - Tutorial 4
+      - Homework
     """
 
     # ────────────── BASIC PASSWORD PROTECTION ──────────────
@@ -119,6 +122,8 @@ def main():
         st.session_state["current_page"] = "Tutorial 3"
     if st.sidebar.button("Tutorial 4"):
         st.session_state["current_page"] = "Tutorial 4"
+    if st.sidebar.button("Homework"):
+        st.session_state["current_page"] = "Homework"
 
     # Route to the selected page
     current_page = st.session_state["current_page"]
@@ -141,6 +146,8 @@ def main():
         tutorial3.main()
     elif current_page == "Tutorial 4":
         tutorial4.main()
+    elif current_page == "Homework":
+        homework.main()
 
 if __name__ == "__main__":
     main()
