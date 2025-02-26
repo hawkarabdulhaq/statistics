@@ -7,7 +7,8 @@ import prob
 import dataset
 import tutorial1
 import tutorial2
-import tutorial3  # <-- Import the new tutorial3 page
+import tutorial3
+import tutorial4  # <-- Import the new tutorial4 page
 
 # ──────────────────────────────────────────────────────────────────────────
 # 1. SET PAGE CONFIG (MUST BE FIRST STREAMLIT COMMAND IN THIS SCRIPT)
@@ -50,6 +51,7 @@ def home_page():
         - **Tutorial 1**: Step-by-step guide for downloading a dataset and running `overview.py`.
         - **Tutorial 2**: Exploring mean, median, and mode with multiple datasets, histograms, and bar charts.
         - **Tutorial 3**: Filtering spectral bands to identify water, forest, or crops using NDVI/MNDWI thresholds.
+        - **Tutorial 4**: Abraham Reef Biannual Coral Isotope Data (Group Task) — advanced reading, filtering, correlation, and interpretation.
         """
     )
     
@@ -70,7 +72,7 @@ def home_page():
 def main():
     """
     Main controller for page navigation.
-    There are now eight pages:
+    There are now nine pages:
       - Home
       - Basic Statistics (from basic.py)
       - Probability Axioms (from axiom.py)
@@ -79,6 +81,7 @@ def main():
       - Tutorial 1 (from tutorial1.py)
       - Tutorial 2 (from tutorial2.py)
       - Tutorial 3 (from tutorial3.py)
+      - Tutorial 4 (from tutorial4.py)
     """
     # Initialize session state for tracking current page
     if "current_page" not in st.session_state:
@@ -101,6 +104,8 @@ def main():
         st.session_state["current_page"] = "Tutorial 2"
     if st.sidebar.button("Tutorial 3"):
         st.session_state["current_page"] = "Tutorial 3"
+    if st.sidebar.button("Tutorial 4"):  # <-- New button for Tutorial 4
+        st.session_state["current_page"] = "Tutorial 4"
 
     # Route to the selected page
     current_page = st.session_state["current_page"]
@@ -121,6 +126,8 @@ def main():
         tutorial2.main()
     elif current_page == "Tutorial 3":
         tutorial3.main()
+    elif current_page == "Tutorial 4":
+        tutorial4.main()  # <-- Route to tutorial4
 
 if __name__ == "__main__":
     main()
