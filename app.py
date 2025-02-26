@@ -8,7 +8,7 @@ import dataset
 import tutorial1
 import tutorial2
 import tutorial3
-import tutorial4  # <-- Import the new tutorial4 page
+import tutorial4
 
 # ──────────────────────────────────────────────────────────────────────────
 # 1. SET PAGE CONFIG (MUST BE FIRST STREAMLIT COMMAND IN THIS SCRIPT)
@@ -71,18 +71,31 @@ def home_page():
 
 def main():
     """
-    Main controller for page navigation.
-    There are now nine pages:
+    Main controller for page navigation, behind a simple password check.
+
+    Pages:
       - Home
-      - Basic Statistics (from basic.py)
-      - Probability Axioms (from axiom.py)
-      - Probability (Fossil A & B) (from prob.py)
-      - Dataset (from dataset.py)
-      - Tutorial 1 (from tutorial1.py)
-      - Tutorial 2 (from tutorial2.py)
-      - Tutorial 3 (from tutorial3.py)
-      - Tutorial 4 (from tutorial4.py)
+      - Basic Statistics
+      - Probability Axioms
+      - Probability (Fossil A & B)
+      - Dataset
+      - Tutorial 1
+      - Tutorial 2
+      - Tutorial 3
+      - Tutorial 4
     """
+
+    # ────────────── BASIC PASSWORD PROTECTION ──────────────
+    st.sidebar.title("Access Key")
+    password = st.sidebar.text_input("Enter Password:", type="password")
+
+    if password != "stat2025":
+        st.warning("Please enter the correct password to access this portal.")
+        st.stop()  # Stop the script if incorrect password
+
+    # Once password is correct, user can see the rest of the app
+
+    st.sidebar.title("Navigation")
     # Initialize session state for tracking current page
     if "current_page" not in st.session_state:
         st.session_state["current_page"] = "Home"
@@ -104,7 +117,7 @@ def main():
         st.session_state["current_page"] = "Tutorial 2"
     if st.sidebar.button("Tutorial 3"):
         st.session_state["current_page"] = "Tutorial 3"
-    if st.sidebar.button("Tutorial 4"):  # <-- New button for Tutorial 4
+    if st.sidebar.button("Tutorial 4"):
         st.session_state["current_page"] = "Tutorial 4"
 
     # Route to the selected page
@@ -127,7 +140,7 @@ def main():
     elif current_page == "Tutorial 3":
         tutorial3.main()
     elif current_page == "Tutorial 4":
-        tutorial4.main()  # <-- Route to tutorial4
+        tutorial4.main()
 
 if __name__ == "__main__":
     main()
