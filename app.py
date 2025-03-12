@@ -8,6 +8,7 @@ import tutorial1
 import tutorial2
 import tutorial3
 import tutorial4
+import tutorial5  # <-- Added Tutorial 5 page
 import homework  # <-- Homework page
 
 # ──────────────────────────────────────────────────────────────────────────
@@ -53,6 +54,7 @@ def home_page():
         - **Tutorial 2**: Exploring mean, median, and mode with multiple datasets, histograms, and bar charts.
         - **Tutorial 3**: Filtering spectral bands to identify water, forest, or crops using NDVI/MNDWI thresholds.
         - **Tutorial 4**: Abraham Reef Biannual Coral Isotope Data (Group Task) — advanced reading, filtering, correlation, and interpretation.
+        - **Tutorial 5**: Visualizing and understanding topographical data with probability (XYZ elevation data, PDF/CDF).
         - **Homework**: Instructions for one-page results for each tutorial, to be submitted in Coospace.
         """
     )
@@ -86,6 +88,7 @@ def main():
       - Tutorial 2
       - Tutorial 3
       - Tutorial 4
+      - Tutorial 5      <-- New Tutorial 5 page
       - Homework
     """
     # ────────────── BASIC PASSWORD PROTECTION ──────────────
@@ -96,7 +99,7 @@ def main():
         st.warning("Please enter the correct password to access this portal.")
         st.stop()  # Stop the script if incorrect password
 
-    # Once password is correct, user can see the rest of the app
+    # Once password is correct, show the rest of the app
     st.sidebar.title("Navigation")
     # Initialize session state for tracking current page
     if "current_page" not in st.session_state:
@@ -123,6 +126,8 @@ def main():
         st.session_state["current_page"] = "Tutorial 3"
     if st.sidebar.button("Tutorial 4"):
         st.session_state["current_page"] = "Tutorial 4"
+    if st.sidebar.button("Tutorial 5"):
+        st.session_state["current_page"] = "Tutorial 5"
     if st.sidebar.button("Homework"):
         st.session_state["current_page"] = "Homework"
 
@@ -149,6 +154,8 @@ def main():
         tutorial3.main()
     elif current_page == "Tutorial 4":
         tutorial4.main()
+    elif current_page == "Tutorial 5":
+        tutorial5.main()
     elif current_page == "Homework":
         homework.main()
 
