@@ -60,30 +60,103 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def linear_membership(x, a, b):
-    \"\"\"Linear membership: 0 for x <= a, 1 for x >= b, linear between.\"\"\"
+    """
+    Linear membership function.
+    Returns 0 for values x <= a, 1 for values x >= b, and a linear interpolation in between.
+    """
     return np.clip((x - a) / (b - a), 0, 1)
 
-# Define an elevation range for plotting
-elevations = np.linspace(300, 450, 500)
+# ---------------------------------------------------------------------------
+# Step 1: Load the elevation dataset
+# ---------------------------------------------------------------------------
+print("Loading elevation dataset from '/content/sample_data/Elevation_backup.xyz' ...")
+# The file is expected to be tab-delimited with three columns: longitude, latitude, elevation.
+data = np.loadtxt('/content/sample_data/Elevation_backup.xyz', delimiter='\t')
+print("Dataset loaded successfully.")
+print(f"Total records: {data.shape[0]}")
 
-# Define fuzzy membership functions for three classes:
-# Lowland: 300 - 350 (membership decreases after 350)
-lowland = 1 - linear_membership(elevations, 300, 350)
-# Upland: 350 to 400 (peaks in the middle)
-upland = linear_membership(elevations, 350, 375) * (1 - linear_membership(elevations, 375, 400))
-# Highland: 400 to 410 (sharp transition)
-highland = linear_membership(elevations, 400, 410)
+# Extract the elevation column (third column)
+elevations_data = data[:, 2]
+print("Extracted elevation data from the third column.")
+
+# ---------------------------------------------------------------------------
+# Step 2: Determine the plotting range based on the dataset
+# ---------------------------------------------------------------------------
+min_data_elev = elevations_data.min()
+max_data_elev = elevations_data.max()
+min_elev = np.floor(min_data_elev) - 5  # add a margin of 5 m below the min elevation
+max_elev = np.ceil(max_data_elev) + 5   # add a margin of 5 m above the max elevation
+print(f"Elevation data ranges from {min_data_elev:.2f} m to {max_data_elev:.2f} m.")
+print(f"Plotting range set from {min_elev:.2f} m to {max_elev:.2f} m.")
+
+# Generate an array of elevations for plotting fuzzy membership functions.
+elevations = np.linspace(min_elev, max_elev, 500)
+print("Generated an array of 500 evenly spaced elevation values for plotting.")
+
+# ---------------------------------------------------------------------------
+# Step 3: Define fuzzy membership functions for elevation categories
+# ---------------------------------------------------------------------------
+print("\nDefining fuzzy membership functions...")
+
+def low_membership(elev):
+    """
+    Fuzzy membership for 'Lowland' category:
+    Full membership (1) for elevations ≤ 395 m; then linearly decreasing to 0 at 400 m.
+    """
+    return np.where(elev <= 395, 1, np.clip((400 - elev) / (400 - 395), 0, 1))
+
+def medium_membership(elev):
+    """
+    Fuzzy membership for 'Upland' category:
+    A triangular membership function that starts at 0 at 395 m,
+    reaches full membership (1) at 400 m, and decreases back to 0 at 405 m.
+    """
+    mem = np.zeros_like(elev)
+    # Rising edge: from 395 to 400 m
+    mask1 = (elev > 395) & (elev <= 400)
+    mem[mask1] = (elev[mask1] - 395) / (400 - 395)
+    # Falling edge: from 400 to 405 m
+    mask2 = (elev > 400) & (elev < 405)
+    mem[mask2] = (405 - elev[mask2]) / (405 - 400)
+    return np.clip(mem, 0, 1)
+
+def high_membership(elev):
+    """
+    Fuzzy membership for 'Highland' category:
+    Zero membership for elevations ≤ 400 m; then increases linearly to 1 at 405 m.
+    """
+    return np.where(elev <= 400, 0, np.where(elev >= 405, 1, np.clip((elev - 400) / (405 - 400), 0, 1)))
+
+print("Fuzzy membership functions defined for Lowland, Upland, and Highland.")
+
+# ---------------------------------------------------------------------------
+# Step 4: Compute fuzzy membership values over the plotting range
+# ---------------------------------------------------------------------------
+print("\nComputing fuzzy membership values for the defined elevation range...")
+low_vals = low_membership(elevations)
+medium_vals = medium_membership(elevations)
+high_vals = high_membership(elevations)
+print("Fuzzy membership values computed.")
+
+# ---------------------------------------------------------------------------
+# Step 5: Plot the fuzzy membership functions
+# ---------------------------------------------------------------------------
+print("\nPlotting fuzzy membership functions...")
 
 plt.figure(figsize=(10, 5))
-plt.plot(elevations, lowland, label='Lowland', color='blue')
-plt.plot(elevations, upland, label='Upland', color='orange')
-plt.plot(elevations, highland, label='Highland', color='green')
+plt.plot(elevations, low_vals, label='Lowland', color='blue')
+plt.plot(elevations, medium_vals, label='Upland', color='orange')
+plt.plot(elevations, high_vals, label='Highland', color='green')
 plt.title("Fuzzy Membership Functions for Elevation Categories")
 plt.xlabel("Elevation (m)")
 plt.ylabel("Membership Degree")
 plt.legend()
 plt.grid(alpha=0.3)
+plt.tight_layout()
 plt.show()
+
+print("\nPlot displayed successfully. The graph shows the membership degrees for each elevation category across the specified range.")
+
 """
         st.code(fuzzy_script, language="python")
 
