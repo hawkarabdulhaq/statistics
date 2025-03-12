@@ -129,7 +129,7 @@ def main():
         st.session_state["current_page"] = "Tutorial 3"
     if st.sidebar.button("Tutorial 4"):
         st.session_state["current_page"] = "Tutorial 4"
-    if st.sidebar.button("Homework"):
+    if st.sidebar.button("Homework 1"):
         st.session_state["current_page"] = "Homework"
     if st.sidebar.button("Tutorial 5"):
         st.session_state["current_page"] = "Tutorial 5"
