@@ -59,7 +59,7 @@ def home_page():
         - **Tutorial 6**: Conditional Probability for Elevation Prediction — using conditional probability and Bayes’ theorem to predict elevation events.
         - **Tutorial 7**: Applying Fuzzy Set Theory to Elevation Data – manage uncertainty with fuzzy membership functions.
         - **Tutorial 8**: Fuzzy Logic Application for Terrain Classification – apply fuzzy rules for classifying terrain.
-        - **Homework**: Submit your one-page summary results for each tutorial.
+        - **Homework 2**: Submit your one-page summary results for each tutorial.
         """
     )
     
