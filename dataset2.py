@@ -50,12 +50,14 @@ def main():
         colorbar=dict(title="Elevation (m)")
     )])
     
+    # Adjust the layout to reduce vertical exaggeration by scaling down the z-axis
     fig.update_layout(
         title="3D Elevation Surface",
         scene=dict(
             xaxis_title='Longitude',
             yaxis_title='Latitude',
-            zaxis_title='Elevation'
+            zaxis_title='Elevation',
+            aspectratio=dict(x=1, y=1, z=0.3)  # Reduced vertical exaggeration
         )
     )
     
