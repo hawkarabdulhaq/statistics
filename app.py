@@ -169,7 +169,6 @@ def main():
     elif current_page == "Tutorial 4":
         tutorial4.main()
     elif current_page == "Homework 1":
-        # Assuming Homework 1 is handled in a file named "homework.py"
         homework.main()
     elif current_page == "Tutorial 5":
         tutorial5.main()
@@ -180,8 +179,7 @@ def main():
     elif current_page == "Tutorial 8":
         tutorial8.main()
     elif current_page == "Homework 2":
-        # Assuming Homework 2 is in the "homework" module, or "homework2.py"
-        homework.main()
+        homework2.main()
 
 if __name__ == "__main__":
     main()
