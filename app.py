@@ -8,8 +8,9 @@ import tutorial1
 import tutorial2
 import tutorial3
 import tutorial4
-import tutorial5  # <-- Added Tutorial 5 page
-import homework  # <-- Homework page
+import tutorial5  # <-- Tutorial 5 page
+import tutorial6  # <-- Tutorial 6 page
+import homework   # <-- Homework page
 
 # ──────────────────────────────────────────────────────────────────────────
 # 1. SET PAGE CONFIG (MUST BE FIRST STREAMLIT COMMAND IN THIS SCRIPT)
@@ -24,10 +25,7 @@ def home_page():
     """
     Displays the Home page with a banner, a welcome message, and an interactive footer.
     """
-    # Display banner image using use_container_width
     st.image("banner.png", use_container_width=True)
-
-    # Home title and welcome message
     st.title("Welcome to ABDULHAQ Hawkar's Learning Portal")
     st.markdown(
         """
@@ -55,14 +53,13 @@ def home_page():
         - **Tutorial 3**: Filtering spectral bands to identify water, forest, or crops using NDVI/MNDWI thresholds.
         - **Tutorial 4**: Abraham Reef Biannual Coral Isotope Data (Group Task) — advanced reading, filtering, correlation, and interpretation.
         - **Tutorial 5**: Visualizing and understanding topographical data with probability (XYZ elevation data, PDF/CDF).
+        - **Tutorial 6**: Conditional Probability for Elevation Prediction — using conditional probability and Bayes’ theorem to predict elevation events.
         - **Homework**: Instructions for one-page results for each tutorial, to be submitted in Coospace.
         """
     )
     
     st.markdown("---")
     st.info("Feel free to click the navigation buttons on the sidebar to start exploring!")
-
-    # Footer displayed at the bottom of the Home page
     st.markdown(
         """
         <hr>
@@ -88,19 +85,20 @@ def main():
       - Tutorial 2
       - Tutorial 3
       - Tutorial 4
-      - Tutorial 5      <-- New Tutorial 5 page
+      - Tutorial 5
+      - Tutorial 6
       - Homework
     """
     # ────────────── BASIC PASSWORD PROTECTION ──────────────
     st.sidebar.title("Access Key")
     password = st.sidebar.text_input("Enter Password:", type="password")
-
     if password != "stat2025":
         st.warning("Please enter the correct password to access this portal.")
-        st.stop()  # Stop the script if incorrect password
+        st.stop()  # Stop the script if password is incorrect
 
-    # Once password is correct, show the rest of the app
+    # Once password is correct, show the navigation buttons
     st.sidebar.title("Navigation")
+    
     # Initialize session state for tracking current page
     if "current_page" not in st.session_state:
         st.session_state["current_page"] = "Home"
@@ -128,6 +126,8 @@ def main():
         st.session_state["current_page"] = "Tutorial 4"
     if st.sidebar.button("Tutorial 5"):
         st.session_state["current_page"] = "Tutorial 5"
+    if st.sidebar.button("Tutorial 6"):
+        st.session_state["current_page"] = "Tutorial 6"
     if st.sidebar.button("Homework"):
         st.session_state["current_page"] = "Homework"
 
@@ -156,6 +156,8 @@ def main():
         tutorial4.main()
     elif current_page == "Tutorial 5":
         tutorial5.main()
+    elif current_page == "Tutorial 6":
+        tutorial6.main()
     elif current_page == "Homework":
         homework.main()
 
