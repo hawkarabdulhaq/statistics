@@ -54,11 +54,11 @@ def home_page():
         - **Tutorial 2**: Exploring mean, median, and mode with multiple datasets, histograms, and bar charts.
         - **Tutorial 3**: Filtering spectral bands to identify water, forest, or crops using NDVI/MNDWI thresholds.
         - **Tutorial 4**: Abraham Reef Biannual Coral Isotope Data (Group Task) — advanced reading, filtering, correlation, and interpretation.
+        - **Homework 1**: Submission page for your one-page homework results.
         - **Tutorial 5**: Visualizing and understanding topographical data with probability (XYZ elevation data, PDF/CDF).
         - **Tutorial 6**: Conditional Probability for Elevation Prediction — using conditional probability and Bayes’ theorem to predict elevation events.
         - **Tutorial 7**: Advanced analysis using fuzzy set theory, distribution fitting, and Bayesian updating for elevation uncertainty.
         - **Tutorial 8**: Fuzzy Logic Application for Terrain Classification – apply fuzzy rules for classifying terrain based on elevation, latitude, and longitude.
-        - **Homework**: Submission page for your one-page homework results.
         """
     )
     
