@@ -282,7 +282,7 @@ print("Fuzzy classification complete.")
         )
 
 def main():
-    tutorial3_page()
+    tutorial8_page()
 
 if __name__ == "__main__":
     main()
