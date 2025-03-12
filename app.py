@@ -89,11 +89,12 @@ def main():
       - Tutorial 2
       - Tutorial 3
       - Tutorial 4
+      - Homework
       - Tutorial 5
       - Tutorial 6
       - Tutorial 7
       - Tutorial 8
-      - Homework
+
     """
     st.sidebar.title("Access Key")
     password = st.sidebar.text_input("Enter Password:", type="password")
