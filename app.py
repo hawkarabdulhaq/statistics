@@ -57,8 +57,9 @@ def home_page():
         - **Homework 1**: Submission page for your one-page homework results.
         - **Tutorial 5**: Visualizing and understanding topographical data with probability (XYZ elevation data, PDF/CDF).
         - **Tutorial 6**: Conditional Probability for Elevation Prediction — using conditional probability and Bayes’ theorem to predict elevation events.
-        - **Tutorial 7**: Advanced analysis using fuzzy set theory, distribution fitting, and Bayesian updating for elevation uncertainty.
-        - **Tutorial 8**: Fuzzy Logic Application for Terrain Classification – apply fuzzy rules for classifying terrain based on elevation, latitude, and longitude.
+        - **Tutorial 7**: Applying Fuzzy Set Theory to Elevation Data – manage uncertainty with fuzzy membership functions.
+        - **Tutorial 8**: Fuzzy Logic Application for Terrain Classification – apply fuzzy rules for classifying terrain.
+        - **Homework**: Submit your one-page summary results for each tutorial.
         """
     )
     
@@ -76,8 +77,7 @@ def home_page():
 
 def main():
     """
-    Main controller for page navigation, protected by a simple password.
-    
+    Main controller for page navigation.
     Pages:
       - Home
       - Basic Statistics
@@ -94,13 +94,12 @@ def main():
       - Tutorial 6
       - Tutorial 7
       - Tutorial 8
-
     """
     st.sidebar.title("Access Key")
     password = st.sidebar.text_input("Enter Password:", type="password")
     if password != "stat2025":
         st.warning("Please enter the correct password to access this portal.")
-        st.stop()  # Stop execution if password is incorrect
+        st.stop()
 
     st.sidebar.title("Navigation")
     
@@ -140,7 +139,6 @@ def main():
     if st.sidebar.button("Tutorial 8"):
         st.session_state["current_page"] = "Tutorial 8"
 
-    # Route to the selected page
     current_page = st.session_state["current_page"]
 
     if current_page == "Home":
@@ -170,7 +168,6 @@ def main():
     elif current_page == "Tutorial 7":
         tutorial7.main()
     elif current_page == "Tutorial 8":
-        # Call the main function from tutorial8.py (the most advanced tutorial)
         tutorial8.main()
     elif current_page == "Homework":
         homework.main()
