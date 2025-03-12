@@ -129,6 +129,8 @@ def main():
         st.session_state["current_page"] = "Tutorial 3"
     if st.sidebar.button("Tutorial 4"):
         st.session_state["current_page"] = "Tutorial 4"
+    if st.sidebar.button("Homework"):
+        st.session_state["current_page"] = "Homework"
     if st.sidebar.button("Tutorial 5"):
         st.session_state["current_page"] = "Tutorial 5"
     if st.sidebar.button("Tutorial 6"):
@@ -137,8 +139,6 @@ def main():
         st.session_state["current_page"] = "Tutorial 7"
     if st.sidebar.button("Tutorial 8"):
         st.session_state["current_page"] = "Tutorial 8"
-    if st.sidebar.button("Homework"):
-        st.session_state["current_page"] = "Homework"
 
     # Route to the selected page
     current_page = st.session_state["current_page"]
