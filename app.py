@@ -12,7 +12,7 @@ import tutorial5  # Tutorial 5 page
 import tutorial6  # Tutorial 6 page
 import tutorial7  # Tutorial 7 page
 import tutorial8  # Tutorial 8 page (new)
-import homework   # Homework page
+import homework   # Homework page (Homework 2)
 
 # ──────────────────────────────────────────────────────────────────────────
 # 1. SET PAGE CONFIG (MUST BE FIRST STREAMLIT COMMAND IN THIS SCRIPT)
@@ -53,13 +53,13 @@ def home_page():
         - **Tutorial 1**: Step-by-step guide for downloading a dataset and running `overview.py`.
         - **Tutorial 2**: Exploring mean, median, and mode with multiple datasets, histograms, and bar charts.
         - **Tutorial 3**: Filtering spectral bands to identify water, forest, or crops using NDVI/MNDWI thresholds.
-        - **Tutorial 4**: Abraham Reef Biannual Coral Isotope Data (Group Task) — advanced reading, filtering, correlation, and interpretation.
+        - **Tutorial 4**: Abraham Reef Coral Isotope Data (Group Task) — advanced reading, filtering, correlation, and interpretation.
         - **Homework 1**: Submission page for your one-page homework results.
         - **Tutorial 5**: Visualizing and understanding topographical data with probability (XYZ elevation data, PDF/CDF).
         - **Tutorial 6**: Conditional Probability for Elevation Prediction — using conditional probability and Bayes’ theorem to predict elevation events.
-        - **Tutorial 7**: Applying Fuzzy Set Theory to Elevation Data – manage uncertainty with fuzzy membership functions.
-        - **Tutorial 8**: Fuzzy Logic Application for Terrain Classification – apply fuzzy rules for classifying terrain.
-        - **Homework 2**: Submit your one-page summary results for each tutorial.
+        - **Tutorial 7**: Advanced analysis using fuzzy set theory, distribution fitting, and Bayesian updating for elevation uncertainty.
+        - **Tutorial 8**: Fuzzy Logic Application for Terrain Classification – apply fuzzy rules for classifying terrain based on elevation, latitude, and longitude.
+        - **Homework 2**: Submission page for your one-page homework results for all tutorials.
         """
     )
     
@@ -77,7 +77,8 @@ def home_page():
 
 def main():
     """
-    Main controller for page navigation.
+    Main controller for page navigation (protected by a password).
+
     Pages:
       - Home
       - Basic Statistics
@@ -89,17 +90,18 @@ def main():
       - Tutorial 2
       - Tutorial 3
       - Tutorial 4
-      - Homework
+      - Homework 1
       - Tutorial 5
       - Tutorial 6
       - Tutorial 7
       - Tutorial 8
+      - Homework 2
     """
     st.sidebar.title("Access Key")
     password = st.sidebar.text_input("Enter Password:", type="password")
     if password != "stat2025":
         st.warning("Please enter the correct password to access this portal.")
-        st.stop()
+        st.stop()  # Stop execution if password is incorrect
 
     st.sidebar.title("Navigation")
     
@@ -129,7 +131,7 @@ def main():
     if st.sidebar.button("Tutorial 4"):
         st.session_state["current_page"] = "Tutorial 4"
     if st.sidebar.button("Homework 1"):
-        st.session_state["current_page"] = "Homework"
+        st.session_state["current_page"] = "Homework 1"
     if st.sidebar.button("Tutorial 5"):
         st.session_state["current_page"] = "Tutorial 5"
     if st.sidebar.button("Tutorial 6"):
@@ -138,7 +140,10 @@ def main():
         st.session_state["current_page"] = "Tutorial 7"
     if st.sidebar.button("Tutorial 8"):
         st.session_state["current_page"] = "Tutorial 8"
+    if st.sidebar.button("Homework 2"):
+        st.session_state["current_page"] = "Homework 2"
 
+    # Route to the selected page
     current_page = st.session_state["current_page"]
 
     if current_page == "Home":
@@ -161,6 +166,9 @@ def main():
         tutorial3.main()
     elif current_page == "Tutorial 4":
         tutorial4.main()
+    elif current_page == "Homework 1":
+        # Assuming Homework 1 is handled in a file named "homework.py"
+        homework.main()
     elif current_page == "Tutorial 5":
         tutorial5.main()
     elif current_page == "Tutorial 6":
@@ -169,7 +177,8 @@ def main():
         tutorial7.main()
     elif current_page == "Tutorial 8":
         tutorial8.main()
-    elif current_page == "Homework":
+    elif current_page == "Homework 2":
+        # Assuming Homework 2 is in the "homework" module, or "homework2.py"
         homework.main()
 
 if __name__ == "__main__":
