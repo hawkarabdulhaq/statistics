@@ -10,6 +10,7 @@ import tutorial3
 import tutorial4
 import tutorial5  # <-- Tutorial 5 page
 import tutorial6  # <-- Tutorial 6 page
+import tutorial7  # <-- Tutorial 7 page
 import homework   # <-- Homework page
 
 # ──────────────────────────────────────────────────────────────────────────
@@ -17,7 +18,7 @@ import homework   # <-- Homework page
 # ──────────────────────────────────────────────────────────────────────────
 st.set_page_config(
     layout="wide",
-    page_title="Multi-Page App: Home | Basic Stats | Probability Axioms | Probability | Dataset | Tutorials",
+    page_title="Multi-Page App: Home | Basic Stats | Probability Axioms | Dataset | Tutorials",
     initial_sidebar_state="expanded"
 )
 
@@ -54,6 +55,7 @@ def home_page():
         - **Tutorial 4**: Abraham Reef Biannual Coral Isotope Data (Group Task) — advanced reading, filtering, correlation, and interpretation.
         - **Tutorial 5**: Visualizing and understanding topographical data with probability (XYZ elevation data, PDF/CDF).
         - **Tutorial 6**: Conditional Probability for Elevation Prediction — using conditional probability and Bayes’ theorem to predict elevation events.
+        - **Tutorial 7**: Advanced analysis using fuzzy set theory, distribution fitting, and Bayesian updating for elevation uncertainty.
         - **Homework**: Instructions for one-page results for each tutorial, to be submitted in Coospace.
         """
     )
@@ -72,8 +74,8 @@ def home_page():
 
 def main():
     """
-    Main controller for page navigation, behind a simple password check.
-
+    Main controller for page navigation, protected by a simple password.
+    
     Pages:
       - Home
       - Basic Statistics
@@ -87,19 +89,18 @@ def main():
       - Tutorial 4
       - Tutorial 5
       - Tutorial 6
+      - Tutorial 7
       - Homework
     """
-    # ────────────── BASIC PASSWORD PROTECTION ──────────────
     st.sidebar.title("Access Key")
     password = st.sidebar.text_input("Enter Password:", type="password")
     if password != "stat2025":
         st.warning("Please enter the correct password to access this portal.")
-        st.stop()  # Stop the script if password is incorrect
+        st.stop()  # Stop execution if password is incorrect
 
-    # Once password is correct, show the navigation buttons
     st.sidebar.title("Navigation")
     
-    # Initialize session state for tracking current page
+    # Initialize session state if not present
     if "current_page" not in st.session_state:
         st.session_state["current_page"] = "Home"
 
@@ -128,6 +129,8 @@ def main():
         st.session_state["current_page"] = "Tutorial 5"
     if st.sidebar.button("Tutorial 6"):
         st.session_state["current_page"] = "Tutorial 6"
+    if st.sidebar.button("Tutorial 7"):
+        st.session_state["current_page"] = "Tutorial 7"
     if st.sidebar.button("Homework"):
         st.session_state["current_page"] = "Homework"
 
@@ -158,6 +161,8 @@ def main():
         tutorial5.main()
     elif current_page == "Tutorial 6":
         tutorial6.main()
+    elif current_page == "Tutorial 7":
+        tutorial7.main()
     elif current_page == "Homework":
         homework.main()
 
