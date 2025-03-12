@@ -13,6 +13,8 @@ import tutorial6  # Tutorial 6 page
 import tutorial7  # Tutorial 7 page
 import tutorial8  # Tutorial 8 page (new)
 import homework   # Homework page (Homework 2)
+import homework2   # Homework page (Homework 2)
+
 
 # ──────────────────────────────────────────────────────────────────────────
 # 1. SET PAGE CONFIG (MUST BE FIRST STREAMLIT COMMAND IN THIS SCRIPT)
