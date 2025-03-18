@@ -1,97 +1,126 @@
 import streamlit as st
 
+# Collaborative Home Project: Elevation-Based Risk Mapping
 def homeproject_page():
-    """
-    Home-based Project: Elevation-based Land Cover Classification and Risk Assessment
-    """
+    st.title("🏔️ Collaborative Project: Elevation-Based Risk Mapping")
 
-    st.title("🏔️ Home Project: Elevation-based Land Cover Analysis")
+    st.info("This is a **group project** to be completed collaboratively by **5 students**. Each student should clearly document their individual contributions.")
 
-    st.markdown(
-        """
-        ## Project Overview
+    # ──────────────────────────────────────────────
+    # 1. Project Overview and Objectives
+    # ──────────────────────────────────────────────
+    st.header("📚 Project Overview")
+    st.markdown("""
+    **Objectives:**
+    - Understand how elevation influences natural hazards such as floods and landslides.
+    - Apply statistical methods (conditional probability, Bayesian inference) to develop hazard risk maps.
 
-        **Objective:**
-        In this home-based project, you'll work collaboratively in groups to:
+    **Dataset:**
+    - Utilize the provided elevation data (`Elevation_backup.xyz`).
 
-        - Classify terrain based on elevation data.
-        - Apply conditional probability and fuzzy logic techniques.
-        - Identify areas potentially suitable for agriculture, forestry, water bodies, and flood risk.
+    **Tools & Libraries:**
+    - Python, Google Colab
+    - NumPy, pandas, matplotlib, rasterio, folium
 
-        ---
+    **Project Duration:** Approximately **6 hours** in total
+    """)
 
-        ### Project Duration:
-        - **Expected Time**: ~6 hours
+    # ──────────────────────────────────────────────
+    # 2. Group Structure & Task Allocation
+    # ──────────────────────────────────────────────
+    st.header("👥 Group Structure & Task Allocation")
+    st.markdown("""
+    Divide the following roles among the five group members clearly:
 
-        ---
+    1. **Data Preparation Specialist**: Data loading, initial exploration, summary statistics.
+    2. **Visualization Expert**: Creating histograms, scatter plots, and risk zone visuals.
+    3. **Risk Zone Analyst**: Defining elevation thresholds and justifying risk zones.
+    4. **Probability Analyst**: Calculating conditional probabilities and interpreting results.
+    5. **Bayesian Analyst**: Performing Bayesian updating and generating interactive risk maps.
 
-        ### Dataset
+    Clearly document each member's contribution in your final report.
+    """)
 
-        **Dataset provided**:
-        - `Elevation_backup.xyz` (longitude, latitude, elevation)
+    # ──────────────────────────────────────────────
+    # 3. Tasks and Deliverables
+    # ──────────────────────────────────────────────
+    st.header("📌 Tasks and Deliverables")
 
-        ---
+    st.subheader("🔎 1. Data Preparation & Exploration")
+    st.markdown("""
+    - Load the elevation dataset (`Elevation_backup.xyz`).
+    - Compute and document mean, median, min, max, and standard deviation.
+    - Visualize data with:
+        - Elevation histogram
+        - Scatter plot of elevation vs. spatial coordinates
+    **Deliverable:** Brief summary (~1 paragraph) of data quality and key observations.
+    **Estimated Time:** 60 min
+    """)
 
-        ### Group Tasks & Roles:
-        Each group should collaborate, discuss, and clearly divide these tasks:
+    st.subheader("🌐 2. Defining Elevation Thresholds for Risk Zones")
+    st.markdown("""
+    - Define elevation-based thresholds (e.g., Lowland ≤ 395m, Highland > 405m).
+    - Justify chosen thresholds through literature or data patterns.
+    - Provide visualizations of these zones on scatter plots/maps.
+    **Deliverable:** Rationale (½ page) and visualizations for chosen thresholds.
+    **Estimated Time:** 60 min
+    """)
 
-        **Task 1: Data Exploration (1 hour)**
-        - Load the elevation data (`Elevation_backup.xyz`) in Google Colab.
-        - Visualize the elevation data (histogram and 2D scatter plot).
-        - Compute and document basic statistical measures (mean, median, variance).
+    st.subheader("📈 3. Conditional Probability Analysis")
+    st.markdown("""
+    - Calculate probabilities such as:
+        - $P(\text{Flood Risk} | \text{Latitude} > threshold)$
+        - $P(\text{Landslide Risk} | \text{Elevation} \; range)$
+    - Experiment with different spatial thresholds.
+    **Deliverable:** Summary tables and/or graphs of conditional probabilities.
+    **Estimated Time:** 90 min
+    """)
 
-        **Task 2: Elevation-Based Classification (1 hour)**
-        - Define clear elevation categories (e.g., Lowland, Upland, Highland).
-        - Classify elevations using conditional statements or clustering.
-        - Plot classified areas using a color-coded scatter plot or map visualization.
+    st.subheader("🔄 4. Bayesian Updating of Risk Predictions")
+    st.markdown("""
+    - Apply Bayesian inference to refine hazard predictions with additional data (e.g., hypothetical rainfall, proximity to rivers).
+    - Generate and present updated risk maps.
+    **Deliverable:** Interactive or static Bayesian-updated risk maps.
+    **Estimated Time:** 90 min
+    """)
 
-        **Task 2: Conditional Probability Analysis (1 hour)**
-        - Calculate conditional probabilities:
-          - Probability of high elevation (>400 m) given specific latitude/longitude ranges.
-          - Probability of lowland areas (<380 m) given spatial conditions.
-        - Discuss how spatial location affects elevation probabilities.
+    st.subheader("📝 5. Interpretation and Final Report")
+    st.markdown("""
+    - Summarize the project's findings:
+        - How did Bayesian updating affect risk assessment?
+        - Discuss practical implications of your risk mapping.
+        - Acknowledge limitations and propose improvements.
 
-        **Task 3: Fuzzy Logic Classification (1.5 hours)**
-        - Define fuzzy membership functions for elevation classes:
-          - Lowland (350–380 m)
-          - Upland (380–400 m)
-          - Highland (>400 m)
-        - Apply fuzzy logic to classify elevation data.
-        - Visualize fuzzy membership functions clearly.
+    **Final Deliverable:** Concise PDF report (1–2 pages) containing:
+    - Initial exploration insights
+    - Risk zone definitions and justifications
+    - Conditional probability results
+    - Bayesian updated maps
+    - Individual student contributions
+    - Reflection and recommendations
 
-        **Task 4: Risk Assessment & Decision-Making (1 hour)**
-        - Use fuzzy classifications and conditional probabilities to assess:
-          - Agricultural suitability
-          - Forestry suitability
-          - Flood risk zones
-        - Produce maps highlighting each classification clearly.
+    **Estimated Time:** 60 min
+    """)
 
-        **Task 5: Collaborative Reporting & Reflection (1 hour)**
-        - Collaboratively write a short report summarizing:
-          - Methods used and key findings.
-          - How conditional probabilities influenced your understanding of terrain.
-          - Practical implications (e.g., flood management, land use planning).
+    # ──────────────────────────────────────────────
+    # Submission Guidelines
+    # ──────────────────────────────────────────────
+    st.header("✅ Submission Guidelines")
+    st.markdown("""
+    Your group submission must clearly indicate:
 
-        ---
+    - **Names and roles** of all 5 participants.
+    - Clearly defined individual contributions.
+    - Organized PDF report with visuals and concise explanations.
 
-        ### Project Submission:
-        - Prepare a clear, concise **group report (max. 5 pages)** including:
-          - Visualizations
-          - Statistical summaries
-          - Probability calculations
-          - Clear explanation of fuzzy logic classifications
-          - Short reflection on decision-making implications
-        - Include the names of all group members and their specific contributions.
+    Submit the report on Coospace as instructed.
 
-        Submit your report through the class portal before the deadline.
+    **Total Estimated Project Time:** ~6 hours
+    """)
 
-        **For Questions & Guidance:**
-        - Contact your instructor at [hawkar.ali.abdulhaq@szte.hu](mailto:hawkar.ali.abdulhaq@szte.hu).
+    st.success("Best of luck! Collaborate effectively and enjoy your project.")
 
-        **Happy collaborating and exploring!**
-        """
-    )
-
+# Main page loader
 def main():
     homeproject_page()
 
