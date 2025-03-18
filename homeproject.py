@@ -1,143 +1,97 @@
 import streamlit as st
 
-# Home Project Page: Elevation-Based Risk Mapping
 def homeproject_page():
-    st.title("🏔️ Elevation-Based Risk Mapping Project")
+    """
+    Home-based Project: Elevation-based Land Cover Classification and Risk Assessment
+    """
 
-    # ──────────────────────────────────────────────
-    # 1. Project Introduction
-    # ──────────────────────────────────────────────
-    st.header("📚 1. Project Introduction")
-    st.markdown("""
-    **Purpose**:
-    - Understand how elevation influences natural hazards (floods, landslides).
-    - Use statistical methods (conditional probability, Bayesian inference) to create hazard risk maps.
+    st.title("🏔️ Home Project: Elevation-based Land Cover Analysis")
 
-    **Dataset**:
-    - Use `Elevation_backup.xyz` (longitude, latitude, elevation).
+    st.markdown(
+        """
+        ## Project Overview
 
-    **Tools Needed**:
-    - Python, Google Colab.
-    - Libraries: NumPy, pandas, matplotlib, rasterio, folium.
+        **Objective:**
+        In this home-based project, you'll work collaboratively in groups to:
 
-    **Estimated Time**: 30 min
-    """)
+        - Classify terrain based on elevation data.
+        - Apply conditional probability and fuzzy logic techniques.
+        - Identify areas potentially suitable for agriculture, forestry, water bodies, and flood risk.
 
-    # ──────────────────────────────────────────────
-    # 2. Data Preparation & Initial Exploration
-    # ──────────────────────────────────────────────
-    st.header("🔬 2. Data Preparation & Initial Exploration")
-    st.markdown("""
-    **Tasks**:
-    - Load elevation data in Dataset 2 page (`Elevation_backup.xyz`).
-    - Calculate basic statistics: mean, median, min/max elevations.
-    - Visualize:
-        - Histogram of elevation values.
-        - Scatter plot (elevation vs. coordinates).
+        ---
 
-    **Output**:
-    - Brief summary (~1 paragraph) of data observations and quality.
+        ### Project Duration:
+        - **Expected Time**: ~6 hours
 
-    **Estimated Time**: 60 min
-    """)
+        ---
 
-    # ──────────────────────────────────────────────
-    # 3. Defining Elevation Thresholds for Risk Zones
-    # ──────────────────────────────────────────────
-    st.header("🎯 3. Defining Elevation Thresholds for Risk Zones")
-    st.markdown("""
-    **Tasks**:
-    - Define clear elevation thresholds for risk zones (e.g., lowland ≤395m, highland >405m).
-    - Visualize these zones with scatter plots/maps.
-    - Provide rationale based on data or literature.
+        ### Dataset
 
-    **Output**:
-    - Explanation (½ page) of chosen thresholds with visuals.
+        **Dataset provided**:
+        - `Elevation_backup.xyz` (longitude, latitude, elevation)
 
-    **Estimated Time**: 45 min
-    """)
+        ---
 
-    # ──────────────────────────────────────────────
-    # 4. Calculating Conditional Probabilities
-    # ──────────────────────────────────────────────
-    st.header("📈 4. Calculating Conditional Probabilities")
-    st.markdown("""
-    **Tasks**:
-    - Compute conditional probabilities such as:
-        - $P(\text{Flood Risk Zone} | \text{Latitude} > threshold)$
-        - $P(\text{Landslide Risk Zone} | \text{Elevation} \; range)$
-    - Experiment with various latitude/longitude thresholds.
-    - Visualize conditional probabilities.
+        ### Group Tasks & Roles:
+        Each group should collaborate, discuss, and clearly divide these tasks:
 
-    **Output**:
-    - Summary table or graph of conditional probability findings.
+        **Task 1: Data Exploration (1 hour)**
+        - Load the elevation data (`Elevation_backup.xyz`) in Google Colab.
+        - Visualize the elevation data (histogram and 2D scatter plot).
+        - Compute and document basic statistical measures (mean, median, variance).
 
-    **Estimated Time**: 90 min
-    """)
+        **Task 2: Elevation-Based Classification (1 hour)**
+        - Define clear elevation categories (e.g., Lowland, Upland, Highland).
+        - Classify elevations using conditional statements or clustering.
+        - Plot classified areas using a color-coded scatter plot or map visualization.
 
-    # ──────────────────────────────────────────────
-    # 5. Bayesian Updating of Risk Maps
-    # ──────────────────────────────────────────────
-    st.header("🔄 5. Bayesian Updating of Risk Maps")
-    st.markdown("""
-    **Tasks**:
-    - Use Bayesian inference to update hazard predictions with hypothetical new data (e.g., rainfall, river proximity).
-    - Example Bayesian updating formula:
+        **Task 2: Conditional Probability Analysis (1 hour)**
+        - Calculate conditional probabilities:
+          - Probability of high elevation (>400 m) given specific latitude/longitude ranges.
+          - Probability of lowland areas (<380 m) given spatial conditions.
+        - Discuss how spatial location affects elevation probabilities.
 
-    $$
-    P(\text{Hazard}|\text{New Data}) = \frac{P(\text{New Data}|\text{Hazard}) \cdot P(\text{Hazard})}{P(\text{New Data})}
-    $$
+        **Task 3: Fuzzy Logic Classification (1.5 hours)**
+        - Define fuzzy membership functions for elevation classes:
+          - Lowland (350–380 m)
+          - Upland (380–400 m)
+          - Highland (>400 m)
+        - Apply fuzzy logic to classify elevation data.
+        - Visualize fuzzy membership functions clearly.
 
-    - Generate updated risk maps (Folium or raster plots).
+        **Task 4: Risk Assessment & Decision-Making (1 hour)**
+        - Use fuzzy classifications and conditional probabilities to assess:
+          - Agricultural suitability
+          - Forestry suitability
+          - Flood risk zones
+        - Produce maps highlighting each classification clearly.
 
-    **Output**:
-    - Interactive/static Bayesian updated risk maps.
+        **Task 5: Collaborative Reporting & Reflection (1 hour)**
+        - Collaboratively write a short report summarizing:
+          - Methods used and key findings.
+          - How conditional probabilities influenced your understanding of terrain.
+          - Practical implications (e.g., flood management, land use planning).
 
-    **Estimated Time**: 75 min
-    """)
+        ---
 
-    # ──────────────────────────────────────────────
-    # 6. Interpretation, Reflection, and Reporting
-    # ──────────────────────────────────────────────
-    st.header("🗒️ 6. Interpretation, Reflection, and Reporting")
-    st.markdown("""
-    **Tasks**:
-    - Summarize key findings (~½–1 page):
-        - How Bayesian updating influenced risk assessments.
-        - Potential real-world applications.
-    - Discuss limitations or uncertainties.
-    - Suggest improvements or further data.
+        ### Project Submission:
+        - Prepare a clear, concise **group report (max. 5 pages)** including:
+          - Visualizations
+          - Statistical summaries
+          - Probability calculations
+          - Clear explanation of fuzzy logic classifications
+          - Short reflection on decision-making implications
+        - Include the names of all group members and their specific contributions.
 
-    **Final Output**:
-    - Concise document (PDF):
-        - Initial observations
-        - Risk zone justification
-        - Conditional probabilities
-        - Bayesian updated risk map visuals
-        - Summary reflection & applications
+        Submit your report through the class portal before the deadline.
 
-    **Estimated Time**: 60 min
-    """)
+        **For Questions & Guidance:**
+        - Contact your instructor at [hawkar.ali.abdulhaq@szte.hu](mailto:hawkar.ali.abdulhaq@szte.hu).
 
-    # ──────────────────────────────────────────────
-    # Deliverables Checklist
-    # ──────────────────────────────────────────────
-    st.header("📝 Deliverables Checklist")
-    st.markdown("""
-    Ensure your submission includes:
+        **Happy collaborating and exploring!**
+        """
+    )
 
-    - [ ] Data exploration summary.
-    - [ ] Defined elevation-based risk zones (with justification).
-    - [ ] Conditional probability calculations (tables/plots).
-    - [ ] Bayesian updated risk map visualization.
-    - [ ] Reflection and interpretation.
-
-    **Total Estimated Project Time**: ~6 hours
-    """)
-
-    st.success("Good luck, and enjoy your analysis!")
-
-# Main page loader for Streamlit app
 def main():
     homeproject_page()
 
