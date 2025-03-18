@@ -29,7 +29,7 @@ def homeproject_page():
     st.header("🔬 2. Data Preparation & Initial Exploration")
     st.markdown("""
     **Tasks**:
-    - Load elevation data in Dataset 2 tab (`Elevation_backup.xyz`).
+    - Load elevation data in Dataset 2 page (`Elevation_backup.xyz`).
     - Calculate basic statistics: mean, median, min/max elevations.
     - Visualize:
         - Histogram of elevation values.
