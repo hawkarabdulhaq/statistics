@@ -16,7 +16,7 @@ def homeproject_page():
     - Apply statistical methods (conditional probability, Bayesian inference) to develop hazard risk maps.
 
     **Dataset:**
-    - Utilize the provided elevation data (`Elevation_backup.xyz`).
+    - Utilize the provided elevation data in dataset 2 (`Elevation_backup.xyz`).
 
     **Tools & Libraries:**
     - Python, Google Colab
