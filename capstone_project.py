@@ -6,76 +6,93 @@ def capstone_project_page():
     st.header("📘 Project Overview")
     st.markdown("""
     This **Capstone Project** invites your team to collaboratively explore and classify reservoir layers 
-    from multiple wells using geostatistical and probabilistic tools learned throughout the course.
+    from multiple wells using the statistical, probabilistic, and clustering tools you’ve learned.
 
-    **Goal**:  
-    Analyze porosity and permeability trends from at least two wells and apply **K-means clustering**, 
-    **Bayesian probability**, **fuzzy logic**, and **correlation analysis** to define and compare reservoir quality zones.
+    **Objective**:  
+    Use real subsurface data to classify reservoir quality zones (high, medium, low) using statistical trends, 
+    K-means clustering, and Bayesian/fuzzy logic.
 
-    **Data Provided**:
+    **Provided Data**:
     - [Well 1](https://github.com/hawkarabdulhaq/statistics/blob/main/input/Well-1.xlsx)
     - [Well 2](https://github.com/hawkarabdulhaq/statistics/blob/main/input/Well-2.xlsx)
 
-    *(More wells may be added as needed.)*
+    *(Three more wells will follow.)*
 
-    **Group Size**: 5 students  
-    **Deadline**: Two weeks from the release date  
-    **Submission**: One final PDF report + Python script or Colab notebook
+    **Team Size**: 5 students  
+    **Deadline**: 2 weeks  
+    **Deliverables**: PDF report + code (.ipynb or .py)
     """)
 
-    st.header("🧩 Tasks and Expectations")
+    st.header("🧩 Tasks and Python Implementation Suggestions")
+
     st.markdown("""
     ### 🔍 1. Data Cleaning & Preparation
-    - Load Excel files into pandas.
-    - Handle missing or invalid porosity/permeability values.
-    - Log-transform permeability if necessary.
+    - **Tools**: `pandas`, `numpy`
+    - Read Excel: `pd.read_excel()`
+    - Clean zero/missing values: `df.replace()`, `df.dropna()`
+    - Apply log transform: `np.log10(df['Permeability'])`
 
     ### 📊 2. Statistical Analysis
-    - Generate histograms, boxplots.
-    - Calculate mean, median, std deviation.
-    - Plot variation with depth.
+    - **Tools**: `pandas`, `matplotlib`, `seaborn`
+    - Describe stats: `df.describe()`
+    - Histogram: `plt.hist()` or `sns.histplot()`
+    - Boxplot: `sns.boxplot()`
+    - Depth trend: `plt.plot(depth, porosity)`
 
     ### 📈 3. K-Means Clustering
-    - Normalize porosity and log-permeability.
-    - Use `sklearn.KMeans` (K = 2 or 3).
-    - Visualize clusters across depth per well.
+    - **Tools**: `sklearn.preprocessing.StandardScaler`, `sklearn.cluster.KMeans`
+    - Normalize: `StandardScaler().fit_transform()`
+    - Apply K-means: `KMeans(n_clusters=3).fit()`
+    - Add cluster labels: `df['Cluster'] = kmeans.labels_`
+    - Depth vs Cluster: `plt.scatter(depth, cluster)`
 
     ### 📐 4. Cross-Well Comparison
-    - Compare clustering across both wells.
-    - Analyze lateral trends and potential continuity.
+    - **Tools**: `matplotlib`, `seaborn`
+    - Compare depth profiles of clusters across wells.
+    - Use side-by-side plots: `plt.subplot(1,2,...)`
 
     ### 🧠 5. Geological Interpretation
-    - Justify cluster meanings with geological reasoning.
-    - Link to depositional environments or diagenetic features.
+    - Map clusters to geological meaning (facies, flow zones).
+    - Support with plots or cross sections.
+    - Add annotations: `plt.text()`, `plt.annotate()`
 
     ### 🔮 6. Threshold-Based Productivity Classification
-    - Define porosity/permeability cutoffs for "productive zones".
-    - Apply **Bayes’ theorem** to update reservoir predictions.
+    - **Tools**: `numpy`, `matplotlib`
+    - Define thresholds (e.g., porosity > 0.12).
+    - Use logic: `np.where(df['Porosity'] > 0.12, "Good", "Poor")`
+    - Apply Bayes' Rule manually or with `scipy.stats.bayes_mvs()`
 
     ### 🌫️ 7. Fuzzy Logic Classification
-    - Define fuzzy elevation or porosity classes.
-    - Apply membership functions and assign fuzzy zones.
+    - **Tools**: `numpy`, `matplotlib`
+    - Define fuzzy sets using linear functions.
+    - Membership: `np.clip((x - a) / (b - a), 0, 1)`
+    - Plot: `plt.plot(x, membership_function)`
 
     ### 🔗 8. Correlation & Feature Relationships
-    - Use heatmaps or pairplots (`seaborn`) to explore relationships.
-    - Discuss implications for feature selection and modeling.
+    - **Tools**: `seaborn`, `pandas`
+    - Correlation matrix: `df.corr()`
+    - Heatmap: `sns.heatmap()`
+    - Pairplot: `sns.pairplot(df[['Porosity', 'Permeability']])`
 
     ### 📊 9. Visual Storytelling & Presentation
-    - Design a consistent visual style (titles, color codes, legends).
-    - Emphasize clarity in how figures support your interpretation.
-    - Optional: Use Streamlit or Folium for interactive visuals.
+    - **Tools**: `matplotlib`, `seaborn`, `folium` (optional), `Streamlit` (bonus)
+    - Use clear titles, labels, legends: `plt.title()`, `plt.xlabel()`, etc.
+    - Color code zones, save high-res images: `plt.savefig()`
+    - (Optional) Interactive: `folium.Map()`, `st.pyplot()`, `st.map()`
 
     """)
 
     st.header("📤 Final Submission")
     st.markdown("""
-    - ✅ PDF report with labeled figures, interpretations, and task results.
-    - ✅ Python script(s) or Colab notebook.
-    - ✅ Team member names with contributions (1 paragraph each).
-    - ✅ Submit to: **Coospace > Capstone Project Folder**
+    Your submission must include:
+    - ✅ Final report (PDF)
+    - ✅ Python script or Colab notebook
+    - ✅ Member names and contributions
+
+    **Submit to**: Coospace > Capstone Project Folder
     """)
 
-    st.success("This final project is your opportunity to showcase the full range of skills acquired in modeling and simulation, from statistical logic to geoscientific insight.")
+    st.success("Use this project to demonstrate your full journey through modeling, statistics, probability, and geoscientific insight. Make it clear, collaborative, and creative!")
 
 def main():
     capstone_project_page()
