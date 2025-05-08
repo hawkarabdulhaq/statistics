@@ -14,11 +14,12 @@ import tutorial7
 import tutorial8
 import homework
 import homework2
-import homeproject  # New Home Project page
+import homeproject
+import capstone_project  # ✅ NEW: Capstone Project
 
 st.set_page_config(
     layout="wide",
-    page_title="Multi-Page App: Home | Basic Stats | Probability Axioms | Dataset | Tutorials",
+    page_title="Multi-Page App: Home | Tutorials | Projects",
     initial_sidebar_state="expanded"
 )
 
@@ -30,7 +31,7 @@ def home_page():
         for dynamic learning of statistical applications in geology.
 
         **Contact**: [hawkar.ali.abdulhaq@szte.hu](mailto:hawkar.ali.abdulhaq@szte.hu)
-        """)
+    """)
 
 def main():
     st.sidebar.title("Access Key")
@@ -48,7 +49,7 @@ def main():
         "Home", "Basic Statistics", "Probability Axioms", "Probability (Fossil A & B)",
         "Dataset", "Dataset 2", "Tutorial 1", "Tutorial 2", "Tutorial 3", "Tutorial 4",
         "Homework 1", "Tutorial 5", "Tutorial 6", "Tutorial 7", "Tutorial 8",
-        "Homework 2", "Home Project"
+        "Homework 2", "Home Project", "Capstone Project"  # ✅ Added Capstone Project
     ]
 
     for page in pages:
@@ -72,7 +73,8 @@ def main():
         "Tutorial 7": tutorial7.main,
         "Tutorial 8": tutorial8.main,
         "Homework 2": homework2.main,
-        "Home Project": homeproject.main  # New Home Project
+        "Home Project": homeproject.main,
+        "Capstone Project": capstone_project.main  # ✅ Routing added
     }
 
     page_router[st.session_state["current_page"]]()
