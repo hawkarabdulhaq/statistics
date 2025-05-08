@@ -5,94 +5,117 @@ def capstone_project_page():
 
     st.header("📘 Project Overview")
     st.markdown("""
-    This **Capstone Project** invites your team to collaboratively explore and classify reservoir layers 
-    from multiple wells using the statistical, probabilistic, and clustering tools you’ve learned.
+    This **Capstone Project** asks your team to apply the full pipeline of skills developed in this course—working with geological data, analyzing trends, and classifying zones using clustering.
 
-    **Objective**:  
-    Use real subsurface data to classify reservoir quality zones (high, medium, low) using statistical trends, 
-    K-means clustering, and Bayesian/fuzzy logic.
+    **Goal**:  
+    Use porosity and permeability data from multiple wells to classify reservoir quality zones (e.g., low, medium, high) and understand their geological significance.
 
-    **Provided Data**:
+    **Data Provided**:
     - [Well 1](https://github.com/hawkarabdulhaq/statistics/blob/main/input/Well-1.xlsx)
     - [Well 2](https://github.com/hawkarabdulhaq/statistics/blob/main/input/Well-2.xlsx)
 
-    *(Three more wells will follow.)*
-
-    **Team Size**: 5 students  
-    **Deadline**: 2 weeks  
-    **Deliverables**: PDF report + code (.ipynb or .py)
+    **Group Size**: 5 students  
+    **Deadline**: Two weeks from release  
+    **Submission**: Final report (PDF) + notebook or script
     """)
 
-    st.header("🧩 Tasks and Python Implementation Suggestions")
+    st.header("🧩 Project Tasks and Tools")
 
     st.markdown("""
-    ### 🔍 1. Data Cleaning & Preparation
-    - **Tools**: `pandas`, `numpy`
-    - Read Excel: `pd.read_excel()`
-    - Clean zero/missing values: `df.replace()`, `df.dropna()`
-    - Apply log transform: `np.log10(df['Permeability'])`
+    ### 🔍 1. Data Cleaning & Preparation  
+    **Tools**: `pandas`, `numpy`  
+    - Load the Excel data from both wells.
+    - Check for missing values or zero entries in porosity/permeability.
+    - Apply a log transformation to permeability if needed.
 
-    ### 📊 2. Statistical Analysis
-    - **Tools**: `pandas`, `matplotlib`, `seaborn`
-    - Describe stats: `df.describe()`
-    - Histogram: `plt.hist()` or `sns.histplot()`
-    - Boxplot: `sns.boxplot()`
-    - Depth trend: `plt.plot(depth, porosity)`
+    **Why**: Clean data is critical for reliable statistical and clustering analysis. Log transforms help manage skewed data like permeability.
 
-    ### 📈 3. K-Means Clustering
-    - **Tools**: `sklearn.preprocessing.StandardScaler`, `sklearn.cluster.KMeans`
-    - Normalize: `StandardScaler().fit_transform()`
-    - Apply K-means: `KMeans(n_clusters=3).fit()`
-    - Add cluster labels: `df['Cluster'] = kmeans.labels_`
-    - Depth vs Cluster: `plt.scatter(depth, cluster)`
+    ---
 
-    ### 📐 4. Cross-Well Comparison
-    - **Tools**: `matplotlib`, `seaborn`
-    - Compare depth profiles of clusters across wells.
-    - Use side-by-side plots: `plt.subplot(1,2,...)`
+    ### 📊 2. Statistical Analysis  
+    **Tools**: `pandas`, `matplotlib`, `seaborn`  
+    - Plot histograms and boxplots of porosity and permeability.
+    - Calculate key statistics: mean, median, standard deviation.
+    - Visualize trends against depth.
 
-    ### 🧠 5. Geological Interpretation
-    - Map clusters to geological meaning (facies, flow zones).
-    - Support with plots or cross sections.
-    - Add annotations: `plt.text()`, `plt.annotate()`
+    **Why**: Understanding basic data behavior helps determine variability and identify trends or outliers before modeling.
 
-    ### 🔮 6. Threshold-Based Productivity Classification
-    - **Tools**: `numpy`, `matplotlib`
-    - Define thresholds (e.g., porosity > 0.12).
-    - Use logic: `np.where(df['Porosity'] > 0.12, "Good", "Poor")`
-    - Apply Bayes' Rule manually or with `scipy.stats.bayes_mvs()`
+    ---
 
-    ### 🌫️ 7. Fuzzy Logic Classification
-    - **Tools**: `numpy`, `matplotlib`
-    - Define fuzzy sets using linear functions.
-    - Membership: `np.clip((x - a) / (b - a), 0, 1)`
-    - Plot: `plt.plot(x, membership_function)`
+    ### 📈 3. K-Means Clustering  
+    **Tools**: `sklearn`, `pandas`, `matplotlib`  
+    - Normalize porosity and log-permeability.
+    - Apply K-means clustering (K=2 or 3).
+    - Assign and label clusters (e.g., low, medium, high quality).
 
-    ### 🔗 8. Correlation & Feature Relationships
-    - **Tools**: `seaborn`, `pandas`
-    - Correlation matrix: `df.corr()`
-    - Heatmap: `sns.heatmap()`
-    - Pairplot: `sns.pairplot(df[['Porosity', 'Permeability']])`
+    **Why**: Clustering helps group data into meaningful zones without subjective thresholds—critical for reservoir classification.
 
-    ### 📊 9. Visual Storytelling & Presentation
-    - **Tools**: `matplotlib`, `seaborn`, `folium` (optional), `Streamlit` (bonus)
-    - Use clear titles, labels, legends: `plt.title()`, `plt.xlabel()`, etc.
-    - Color code zones, save high-res images: `plt.savefig()`
-    - (Optional) Interactive: `folium.Map()`, `st.pyplot()`, `st.map()`
+    ---
 
+    ### 📐 4. Cross-Well Comparison  
+    **Tools**: `seaborn`, `matplotlib`  
+    - Compare cluster distributions across both wells.
+    - Analyze whether good-quality zones occur at similar depths.
+
+    **Why**: Helps assess vertical and lateral consistency, which informs reservoir continuity and development strategy.
+
+    ---
+
+    ### 🧠 5. Geological Interpretation  
+    **Tools**: `matplotlib`, `numpy`  
+    - Describe what each cluster likely represents geologically.
+    - Map clusters to depositional or diagenetic processes if possible.
+
+    **Why**: Data has meaning only when interpreted geologically—this connects data science to real-world subsurface behavior.
+
+    ---
+
+    ### 🔮 6. Threshold-Based Productivity Classification  
+    **Tools**: `pandas`, `numpy`  
+    - Define porosity/permeability thresholds (e.g., >15% or >10⁻¹⁴ m²).
+    - Classify zones based on these thresholds and compare with K-means results.
+
+    **Why**: This offers a rule-based alternative to clustering and allows cross-validation of your machine learning classifications.
+
+    ---
+
+    ### 🌫️ 7. Fuzzy Logic Classification  
+    **Tools**: `numpy`, `matplotlib`  
+    - Define fuzzy membership functions for low/medium/high reservoir quality.
+    - Visualize overlap and softness of classifications.
+
+    **Why**: Real-world geological data often has uncertainty. Fuzzy logic allows soft classification and shows transitional zones.
+
+    ---
+
+    ### 🔗 8. Correlation & Feature Relationships  
+    **Tools**: `pandas`, `seaborn`  
+    - Use correlation matrices or scatter plots to understand relationships.
+    - Assess whether porosity and permeability are strongly related.
+
+    **Why**: Feature correlation supports clustering and geological interpretation. It also helps identify which features drive quality.
+
+    ---
+
+    ### 🧭 9. Visual Storytelling & Presentation  
+    **Tools**: `matplotlib`, `seaborn`, `streamlit` (optional)  
+    - Build plots that clearly explain your findings.
+    - Organize your work into a coherent and readable final report.
+
+    **Why**: Insight without communication is wasted. Well-structured plots and summaries allow your team to present findings with confidence.
     """)
 
     st.header("📤 Final Submission")
     st.markdown("""
-    Your submission must include:
-    - ✅ Final report (PDF)
-    - ✅ Python script or Colab notebook
-    - ✅ Member names and contributions
+    - ✅ PDF report with all findings, plots, and interpretations
+    - ✅ Clean, organized code (Colab notebook or script)
+    - ✅ Contribution paragraph for each student
 
-    **Submit to**: Coospace > Capstone Project Folder
+    **Submit via**: Coospace → Capstone Project Folder  
+    **Deadline**: Two weeks from today
     """)
 
-    st.success("Use this project to demonstrate your full journey through modeling, statistics, probability, and geoscientific insight. Make it clear, collaborative, and creative!")
+    st.success("This is your opportunity to show mastery of geostatistical modeling, clustering, and scientific storytelling. Make it collaborative, creative, and professional!")
 
 def main():
     capstone_project_page()
