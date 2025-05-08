@@ -3,86 +3,79 @@ import streamlit as st
 def capstone_project_page():
     st.title("🎓 Capstone Project: Reservoir Quality Classification & Clustering")
 
-    # ─────────────────────────────────────────────────────────
-    # Introduction
-    # ─────────────────────────────────────────────────────────
     st.header("📘 Project Overview")
     st.markdown("""
     This **Capstone Project** invites your team to collaboratively explore and classify reservoir layers 
-    from multiple wells using geostatistical and probabilistic tools you learned in this course.
+    from multiple wells using geostatistical and probabilistic tools learned throughout the course.
 
     **Goal**:  
-    Analyze porosity and permeability trends from at least two wells and apply **K-means clustering** 
-    to classify reservoir quality zones (e.g., high, medium, low potential zones).
+    Analyze porosity and permeability trends from at least two wells and apply **K-means clustering**, 
+    **Bayesian probability**, **fuzzy logic**, and **correlation analysis** to define and compare reservoir quality zones.
 
     **Data Provided**:
     - [Well 1](https://github.com/hawkarabdulhaq/statistics/blob/main/input/Well-1.xlsx)
     - [Well 2](https://github.com/hawkarabdulhaq/statistics/blob/main/input/Well-2.xlsx)
 
-    *(More wells will be added soon.)*
+    *(More wells may be added as needed.)*
 
     **Group Size**: 5 students  
     **Deadline**: Two weeks from the release date  
-    **Delivery**: One final PDF report + notebook/script files.
+    **Submission**: One final PDF report + Python script or Colab notebook
     """)
 
-    # ─────────────────────────────────────────────────────────
-    # Tasks Breakdown
-    # ─────────────────────────────────────────────────────────
     st.header("🧩 Tasks and Expectations")
-
     st.markdown("""
     ### 🔍 1. Data Cleaning & Preparation
-    - Load Excel files using `pandas.read_excel()`.
-    - Use `.isna()`, `.fillna()`, or `.replace()` to handle missing/zero values.
-    - Apply `numpy.log10()` to permeability for transformation.
+    - Load Excel files into pandas.
+    - Handle missing or invalid porosity/permeability values.
+    - Log-transform permeability if necessary.
 
     ### 📊 2. Statistical Analysis
-    - Use `pandas.describe()` for summary statistics.
-    - Plot:
-        - Histograms using `matplotlib.pyplot.hist()` or `seaborn.histplot()`
-        - Boxplots using `seaborn.boxplot()`
-        - Line plots by depth with `plt.plot()` for trends
+    - Generate histograms, boxplots.
+    - Calculate mean, median, std deviation.
+    - Plot variation with depth.
 
-    ### 📈 3. K-Means Clustering (Reservoir Zonation)
-    - Normalize features using `sklearn.preprocessing.StandardScaler`.
-    - Apply `KMeans` from `sklearn.cluster`.
-    - Choose K = 2 or 3; use `elbow method` (`inertia_`) to justify.
-    - Visualize clusters with:
-        - Depth-colored line plots
-        - 2D scatter of porosity vs log-permeability
-        - Depth vs. cluster zone (color-coded)
+    ### 📈 3. K-Means Clustering
+    - Normalize porosity and log-permeability.
+    - Use `sklearn.KMeans` (K = 2 or 3).
+    - Visualize clusters across depth per well.
 
     ### 📐 4. Cross-Well Comparison
-    - Use grouped analysis: compare cluster means/depths between wells.
-    - Highlight differences in zone thickness or quality.
-    - Use `seaborn.catplot()` or `matplotlib` subplots to compare.
+    - Compare clustering across both wells.
+    - Analyze lateral trends and potential continuity.
 
-    ### 🧠 5. Interpretation & Report
-    - Reflect on the geological significance of each cluster.
-    - Discuss whether permeability dominates, or porosity plays a bigger role.
-    - Bonus (Optional):
-        - Try a 3D scatter (`matplotlib.axes3d`)
-        - Use `Folium` for spatial plotting if coordinates available.
+    ### 🧠 5. Geological Interpretation
+    - Justify cluster meanings with geological reasoning.
+    - Link to depositional environments or diagenetic features.
+
+    ### 🔮 6. Threshold-Based Productivity Classification
+    - Define porosity/permeability cutoffs for "productive zones".
+    - Apply **Bayes’ theorem** to update reservoir predictions.
+
+    ### 🌫️ 7. Fuzzy Logic Classification
+    - Define fuzzy elevation or porosity classes.
+    - Apply membership functions and assign fuzzy zones.
+
+    ### 🔗 8. Correlation & Feature Relationships
+    - Use heatmaps or pairplots (`seaborn`) to explore relationships.
+    - Discuss implications for feature selection and modeling.
+
+    ### 📊 9. Visual Storytelling & Presentation
+    - Design a consistent visual style (titles, color codes, legends).
+    - Emphasize clarity in how figures support your interpretation.
+    - Optional: Use Streamlit or Folium for interactive visuals.
+
     """)
 
-    # ─────────────────────────────────────────────────────────
-    # Submission
-    # ─────────────────────────────────────────────────────────
     st.header("📤 Final Submission")
     st.markdown("""
-    - ✅ A **PDF report** with figures, analysis, and geological interpretations.
-    - ✅ Python **notebooks or scripts** (`.ipynb` or `.py`) used in your analysis.
-    - ✅ A list of group members and **brief description of each student’s contribution**.
-
-    📁 Submit via: **Coospace > Capstone Project Folder**
+    - ✅ PDF report with labeled figures, interpretations, and task results.
+    - ✅ Python script(s) or Colab notebook.
+    - ✅ Team member names with contributions (1 paragraph each).
+    - ✅ Submit to: **Coospace > Capstone Project Folder**
     """)
 
-    st.success("""
-    Your project should demonstrate the integration of everything you've learned: 
-    data preprocessing, statistical reasoning, probabilistic analysis, 
-    and clustering-based classification. Make it practical, visual, and insightful!
-    """)
+    st.success("This final project is your opportunity to showcase the full range of skills acquired in modeling and simulation, from statistical logic to geoscientific insight.")
 
 def main():
     capstone_project_page()
